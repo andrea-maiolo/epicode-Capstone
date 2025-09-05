@@ -1,14 +1,21 @@
 import { useState } from "react";
 import { Form, Button, Image, Container } from "react-bootstrap";
 import logo from "../assets/logo.png";
+import { useNavigate } from "react-router-dom";
 
 const Login = function () {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = function (event) {
     event.preventDefault();
     console.log(event);
+    if (!email || !password) {
+      alert("Please fill all fields!");
+      return; // stop submission
+    }
+    navigate("/home");
   };
 
   const handleEmailChange = function (e) {
