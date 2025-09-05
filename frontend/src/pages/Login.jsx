@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Form, Button, Image, Container } from "react-bootstrap";
+import logo from "../assets/logo.png";
 
 const Login = function () {
   const [email, setEmail] = useState("");
@@ -24,7 +25,7 @@ const Login = function () {
     <Container fluid>
       <div className="d-flex justify-content-evenly">
         <div>
-          <Image src="https://picsum.photos/200/300"></Image>
+          <Image src={logo} alt="Domus" fluid></Image>
         </div>
 
         <Form onSubmit={handleSubmit}>
