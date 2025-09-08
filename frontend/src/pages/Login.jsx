@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form, Button, Image, Container } from "react-bootstrap";
+import { Form, Button, Image, Container, Col, Row } from "react-bootstrap";
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 
@@ -30,26 +30,27 @@ const Login = function () {
 
   return (
     <Container fluid>
-      <div className="d-flex justify-content-evenly">
-        <div>
+      <Row>
+        <Col className="lg-6">
           <Image src={logo} alt="Domus" fluid></Image>
-        </div>
+        </Col>
+        <Col className="lg-6">
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => handleEmailChange(e)} />
+            </Form.Group>
 
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => handleEmailChange(e)} />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => handlePasswordChange(e)} />
-          </Form.Group>
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
-        </Form>
-      </div>
+            <Form.Group className="mb-3" controlId="formBasicPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => handlePasswordChange(e)} />
+            </Form.Group>
+            <Button variant="primary" type="submit">
+              Submit
+            </Button>
+          </Form>
+        </Col>
+      </Row>
     </Container>
   );
 };
