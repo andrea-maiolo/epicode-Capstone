@@ -1,14 +1,6 @@
-@import "../node_modules/bootstrap/scss/functions";
-
-$text: #060609;
-$background: #d4ede9;
+$body-color: #060609;
+$body-bg: #d8e0df;
 $primary: #562692;
 $secondary: #8fccc1;
 
-$custom-colors: (
-  "primary": $primary,
-  "secondary": $secondary,
-);
-
-@import "../node_modules/bootstrap/scss/variables";
-$theme-colors: map-merge($theme-colors, $custom-colors);
+@import "bootstrap/scss/bootstrap";

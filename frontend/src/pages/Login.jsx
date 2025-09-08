@@ -29,12 +29,12 @@ const Login = function () {
   };
 
   return (
-    <Container fluid>
-      <Row>
-        <Col className="lg-6">
+    <Container fluid className="vh-100">
+      <Row className="h-100">
+        <Col className="d-flex align-items-center justify-content-center bg-white">
           <Image src={logo} alt="Domus" fluid></Image>
         </Col>
-        <Col className="lg-6">
+        <Col className="d-flex align-items-center justify-content-center">
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
