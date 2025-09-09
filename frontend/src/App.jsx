@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 
 import Login from "./components/Login";
 import Home from "./components/homeUser/Home";
+import DetailsPage from "./components/DetailsPage";
+import AdminPage from "./components/AdminPage";
 
 function App() {
   return (
@@ -10,7 +12,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
-        {/* <Route path="/admin" element={<AdminPag />} /> */}
+        <Route path="/detail" element={<DetailsPage />} />
+        <Route path="/adminHome" element={<AdminPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -2,17 +2,22 @@ import { Button, ButtonGroup, Col, Container, Dropdown, Form, Image, Nav, Navbar
 import logo from "../../assets/logo.png";
 import { useState } from "react";
 import "./home.scss";
+import { useNavigate } from "react-router-dom";
 
 const Home = function () {
   const [selectedDate, setSelectedDate] = useState("");
   const [adults, setAdults] = useState(2);
   const [children, setChildren] = useState(0);
   const [rooms, setRooms] = useState(1);
+  const navigate = useNavigate();
 
   const handleChange = function (setter, value) {
     setter((prev) => Math.max(0, prev + value));
   };
 
+  const goDetailsPage = function () {
+    navigate("/detail");
+  };
   return (
     <>
       <Navbar className="bg-primary">
@@ -84,14 +89,33 @@ const Home = function () {
             </Dropdown.Menu>
           </Dropdown>
         </Form>
+        <Row className="d-flex align-items-center justify-contetn-center">
+          <Col>
+            <Image src="https://picsum.photos/200/300" />
+          </Col>
+          <Col>
+            descrizione stanza Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatem incidunt ut temporibus obcaecati! Sequi temporibus molestias
+            ab rerum doloribus culpa, unde dolore aliquid distinctio quam quaerat est quisquam sit aliquam. Consequatur numquam quis, velit ratione sit,
+            eligendi magnam reiciendis reprehenderit cumque rerum obcaecati enim quia alias earum corrupti modi fugit ad tempore incidunt harum ut hic
+            doloremque repellat facilis. Distinctio? Earum eos aut nemo eum sapiente ad, optio expedita dicta harum! Ex, ea consequatur maiores molestiae
+            recusandae in animi repudiandae ab! Veniam, consectetur. Nesciunt labore ex atque omnis. Cupiditate, facere. Asperiores, dolorum ad sed nulla maxime
+            explicabo eligendi consequuntur assumenda illo numquam aliquam rerum quisquam unde. Animi alias laborum corporis vitae? Voluptatem impedit
+            reprehenderit atque! Id, aliquam. Necessitatibus, adipisci aliquid. Modi dolore rem autem veritatis hic itaque maxime pariatur omnis repellendus
+            delectus quod sit, magni voluptate ullam iste ea a ipsum impedit. Id soluta cupiditate earum est architecto amet. Exercitationem.
+          </Col>
+          <Col className="d-flex align-items-top">
+            <Button>prenota</Button>
+            <Button onClick={goDetailsPage}>details</Button>
+          </Col>
+        </Row>
         <Row>
           <Col>
-            <p>image stanza</p>
-            <div>
-              descrizione stanza
-              <button>prenota</button>
-              <button>details</button>
-            </div>
+            <Image src="https://picsum.photos/200/300" />
+          </Col>
+          <Col>
+            descrizione stanza
+            <button>prenota</button>
+            <button>details</button>
           </Col>
         </Row>
       </Container>
