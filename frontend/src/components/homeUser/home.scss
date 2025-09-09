@@ -1,0 +1,31 @@
+/* Give it rounded corners and a subtle shadow */
+.custom-date {
+  border-radius: 12px;
+  border: 2px solid #0d6efd; /* Bootstrap primary */
+  padding: 0.6rem 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Change style on focus */
+.custom-date:focus {
+  border-color: #6610f2; /* purple on focus */
+  box-shadow: 0 0 8px rgba(102, 16, 242, 0.3);
+  outline: none;
+}
+
+/* Optional: customize the calendar icon (Chrome/Edge) */
+.custom-date::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(40%) sepia(60%) saturate(500%) hue-rotate(200deg);
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.custom-date::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.test {
+  color: red;
+}
