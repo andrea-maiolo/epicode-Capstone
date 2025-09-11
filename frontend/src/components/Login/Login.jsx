@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Form, Button, Image, Container, Col, Row } from "react-bootstrap";
-import logo from "../assets/logo.png";
+import logo from "../../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 
 const Login = function () {

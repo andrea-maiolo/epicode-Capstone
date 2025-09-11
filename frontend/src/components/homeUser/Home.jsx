@@ -3,9 +3,10 @@ import logo from "../../assets/logo.png";
 import { useState } from "react";
 import "./home.scss";
 import { useNavigate } from "react-router-dom";
+import DateRangePicker from "../DatePicker/DateRPicker";
 
 const Home = function () {
-  const [selectedDate, setSelectedDate] = useState("");
+  const [range, setRange] = useState([new Date(), new Date()]);
   const [adults, setAdults] = useState(2);
   const [children, setChildren] = useState(0);
   const [rooms, setRooms] = useState(1);
@@ -32,11 +33,8 @@ const Home = function () {
       </Navbar>
       <div className="bg-primary text-white px-2">Browse our rooms</div>
       <Container>
-        <Form className="d-flex align-items-center justify-content-center">
-          <Form.Group>
-            <Form.Label>pick a date</Form.Label>
-            <Form.Control type="date" className="custom-date"></Form.Control>
-          </Form.Group>
+        <Form className="d-flex align-items-center justify-content-center border border-danger">
+          <DateRangePicker value={range} onChange={setRange} placeholder="select range of dates" />
           <Dropdown as={ButtonGroup}>
             <Button variant="outline-primary">
               {adults} Adults · {children} Children · {rooms} Rooms
@@ -89,33 +87,46 @@ const Home = function () {
             </Dropdown.Menu>
           </Dropdown>
         </Form>
-        <Row className="d-flex align-items-center justify-contetn-center">
-          <Col>
+        <Row className="align-items-center border border-danger">
+          <Col md={4}>
             <Image src="https://picsum.photos/200/300" />
           </Col>
-          <Col>
+          <Col md={4}>
             descrizione stanza Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatem incidunt ut temporibus obcaecati! Sequi temporibus molestias
             ab rerum doloribus culpa, unde dolore aliquid distinctio quam quaerat est quisquam sit aliquam. Consequatur numquam quis, velit ratione sit,
             eligendi magnam reiciendis reprehenderit cumque rerum obcaecati enim quia alias earum corrupti modi fugit ad tempore incidunt harum ut hic
-            doloremque repellat facilis. Distinctio? Earum eos aut nemo eum sapiente ad, optio expedita dicta harum! Ex, ea consequatur maiores molestiae
-            recusandae in animi repudiandae ab! Veniam, consectetur. Nesciunt labore ex atque omnis. Cupiditate, facere. Asperiores, dolorum ad sed nulla maxime
-            explicabo eligendi consequuntur assumenda illo numquam aliquam rerum quisquam unde. Animi alias laborum corporis vitae? Voluptatem impedit
-            reprehenderit atque! Id, aliquam. Necessitatibus, adipisci aliquid. Modi dolore rem autem veritatis hic itaque maxime pariatur omnis repellendus
-            delectus quod sit, magni voluptate ullam iste ea a ipsum impedit. Id soluta cupiditate earum est architecto amet. Exercitationem.
+            doloremque repellat facilis. Distinctio? Earum eos aut nemo eum sapiente ad, optio expedita
           </Col>
-          <Col className="d-flex align-items-top">
+          <Col
+            md={4}
+            className="d-flex flex-column justify-content-between"
+            style={{
+              height: "250px",
+            }}
+          >
             <Button>prenota</Button>
             <Button onClick={goDetailsPage}>details</Button>
           </Col>
         </Row>
-        <Row>
-          <Col>
+        <Row className="align-items-center">
+          <Col md={4}>
             <Image src="https://picsum.photos/200/300" />
           </Col>
-          <Col>
-            descrizione stanza
-            <button>prenota</button>
-            <button>details</button>
+          <Col md={4}>
+            descrizione stanza Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatem incidunt ut temporibus obcaecati! Sequi temporibus molestias
+            ab rerum doloribus culpa, unde dolore aliquid distinctio quam quaerat est quisquam sit aliquam. Consequatur numquam quis, velit ratione sit,
+            eligendi magnam reiciendis reprehenderit cumque rerum obcaecati enim quia alias earum corrupti modi fugit ad tempore incidunt harum ut hic
+            doloremque repellat facilis. Distinctio? Earum eos aut nemo eum sapiente ad, optio expedita
+          </Col>
+          <Col
+            md={4}
+            className="d-flex flex-column justify-content-between"
+            style={{
+              height: "250px",
+            }}
+          >
+            <Button>prenota</Button>
+            <Button onClick={goDetailsPage}>details</Button>
           </Col>
         </Row>
       </Container>
