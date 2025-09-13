@@ -3,9 +3,11 @@ import { Form, Button, Image, Container, Col, Row } from "react-bootstrap";
 import logo from "../../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 
-const Login = function () {
+const Register = function () {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const API_URL = "http://localhost:3001/auth";
@@ -47,7 +49,7 @@ const Login = function () {
     }
 
     try {
-      const data = await loginUser({ email, password });
+      const data = await registerUser({ name, surname, email, password });
       console.log(data);
     } catch (error) {
       setError(error.message);
@@ -66,8 +68,14 @@ const Login = function () {
     setPassword(e.target.value);
   };
 
-  const handleGoRegistrationPage = function () {
-    navigate("/register");
+  const handleNameChange = function (e) {
+    console.log(e.target.value);
+    setName(e.target.value);
+  };
+
+  const handleSurnameChange = function (e) {
+    console.log(e.target.value);
+    setSurname(e.target.value);
   };
 
   return (
@@ -78,6 +86,16 @@ const Login = function () {
         </Col>
         <Col className="d-flex align-items-center justify-content-center">
           <Form className="w-50" onSubmit={handleSubmit}>
+            <Form.Group className="mb-3" controlId="formBasicName">
+              <Form.Label className="">Name</Form.Label>
+              <Form.Control className="border-secondary" type="text" placeholder="gianni" value={name} onChange={(e) => handleNameChange(e)} />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formBasicSurname">
+              <Form.Label className="">Surname</Form.Label>
+              <Form.Control className="border-secondary" type="text" placeholder="nanni" value={surname} onChange={(e) => handleSurnameChange(e)} />
+            </Form.Group>
+
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label className="">Email address</Form.Label>
               <Form.Control className="border-secondary" type="email" placeholder="gianni@gmail.com" value={email} onChange={(e) => handleEmailChange(e)} />
@@ -90,7 +108,6 @@ const Login = function () {
             <Button variant="primary" type="submit">
               Submit
             </Button>
-            <Button onClick={handleGoRegistrationPage}>Register</Button>
           </Form>
         </Col>
       </Row>
@@ -98,4 +115,4 @@ const Login = function () {
   );
 };
 
-export default Login;
+export default Register;
