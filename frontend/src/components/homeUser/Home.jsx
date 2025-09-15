@@ -10,7 +10,27 @@ const Home = function () {
   const [adults, setAdults] = useState(2);
   const [children, setChildren] = useState(0);
   const [rooms, setRooms] = useState(1);
+  const [roomsFromDb, setRoomsFromDb] = useState([]);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const API_URl = "http://localhost:3001";
+
+  const fetchRooms = async function () {
+    try {
+      const response = await fetch(`${API_URl}/rooms`);
+
+      if (!response.ok) {
+        throw new Error("Could not get rooms");
+      }
+
+      const data = await response.json();
+      setRoomsFromDb(data.content);
+      console.log(roomsFromDb);
+    } catch (error) {
+      setError(error.messaage);
+    }
+  };
 
   const handleChange = function (setter, value) {
     setter((prev) => Math.max(0, prev + value));
@@ -19,6 +39,12 @@ const Home = function () {
   const goDetailsPage = function () {
     navigate("/detail");
   };
+
+  const handleSearch = function (e) {
+    e.preventDefault();
+    fetchRooms();
+  };
+
   return (
     <>
       <Navbar className="bg-primary">
@@ -32,103 +58,81 @@ const Home = function () {
         </Container>
       </Navbar>
       <div className="bg-primary text-white px-2">Browse our rooms</div>
-      <Container>
-        <Form className="d-flex align-items-center justify-content-center border border-danger">
-          <DateRangePicker value={range} onChange={setRange} placeholder="select range of dates" />
-          <Dropdown as={ButtonGroup}>
-            <Button variant="outline-primary">
-              {adults} Adults · {children} Children · {rooms} Rooms
-            </Button>
-            <Dropdown.Toggle split variant="outline-primary" id="dropdown-split-basic" />
-            <Dropdown.Menu style={{ minWidth: "250px" }}>
-              {/* Adults */}
-              <div className="d-flex justify-content-between align-items-center p-2">
-                <span>Adults</span>
-                <div>
-                  <Button size="sm" onClick={() => handleChange(setAdults, -1)}>
-                    -
-                  </Button>
-                  <span className="mx-2">{adults}</span>
-                  <Button size="sm" onClick={() => handleChange(setAdults, 1)}>
-                    +
-                  </Button>
-                </div>
+
+      <Form className="d-flex align-items-center justify-content-center border border-danger" onSubmit={handleSearch}>
+        <DateRangePicker value={range} onChange={setRange} placeholder="select range of dates" />
+        <Dropdown as={ButtonGroup}>
+          <Button variant="outline-primary">
+            {adults} Adults · {children} Children · {rooms} Rooms
+          </Button>
+          <Dropdown.Toggle split variant="outline-primary" id="dropdown-split-basic" />
+          <Dropdown.Menu style={{ minWidth: "250px" }}>
+            {/* Adults */}
+            <div className="d-flex justify-content-between align-items-center p-2">
+              <span>Adults</span>
+              <div>
+                <Button size="sm" onClick={() => handleChange(setAdults, -1)}>
+                  -
+                </Button>
+                <span className="mx-2">{adults}</span>
+                <Button size="sm" onClick={() => handleChange(setAdults, 1)}>
+                  +
+                </Button>
               </div>
-              {/* Children */}
-              <div className="d-flex justify-content-between align-items-center p-2">
-                <span>Children</span>
-                <div>
-                  <Button size="sm" onClick={() => handleChange(setChildren, -1)}>
-                    -
-                  </Button>
-                  <span className="mx-2">{children}</span>
+            </div>
+            {/* Children */}
+            <div className="d-flex justify-content-between align-items-center p-2">
+              <span>Children</span>
+              <div>
+                <Button size="sm" onClick={() => handleChange(setChildren, -1)}>
+                  -
+                </Button>
+                <span className="mx-2">{children}</span>
 
-                  <Button size="sm" onClick={() => handleChange(setChildren, 1)}>
-                    +
-                  </Button>
-                </div>
+                <Button size="sm" onClick={() => handleChange(setChildren, 1)}>
+                  +
+                </Button>
               </div>
-              {/* Rooms */}
+            </div>
+            {/* Rooms */}
 
-              <div className="d-flex justify-content-between align-items-center p-2">
-                <span>Rooms</span>
+            <div className="d-flex justify-content-between align-items-center p-2">
+              <span>Rooms</span>
 
-                <div>
-                  <Button size="sm" onClick={() => handleChange(setRooms, -1)}>
-                    -
-                  </Button>
-                  <span className="mx-2">{rooms}</span>
+              <div>
+                <Button size="sm" onClick={() => handleChange(setRooms, -1)}>
+                  -
+                </Button>
+                <span className="mx-2">{rooms}</span>
 
-                  <Button size="sm" onClick={() => handleChange(setRooms, 1)}>
-                    +
-                  </Button>
-                </div>
+                <Button size="sm" onClick={() => handleChange(setRooms, 1)}>
+                  +
+                </Button>
               </div>
-            </Dropdown.Menu>
-          </Dropdown>
-        </Form>
-        <Row className="align-items-center border border-danger">
-          <Col md={4}>
-            <Image src="https://picsum.photos/200/300" />
-          </Col>
-          <Col md={4}>
-            descrizione stanza Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatem incidunt ut temporibus obcaecati! Sequi temporibus molestias
-            ab rerum doloribus culpa, unde dolore aliquid distinctio quam quaerat est quisquam sit aliquam. Consequatur numquam quis, velit ratione sit,
-            eligendi magnam reiciendis reprehenderit cumque rerum obcaecati enim quia alias earum corrupti modi fugit ad tempore incidunt harum ut hic
-            doloremque repellat facilis. Distinctio? Earum eos aut nemo eum sapiente ad, optio expedita
-          </Col>
-          <Col
-            md={4}
-            className="d-flex flex-column justify-content-between"
-            style={{
-              height: "250px",
-            }}
-          >
-            <Button>prenota</Button>
-            <Button onClick={goDetailsPage}>details</Button>
-          </Col>
-        </Row>
-        <Row className="align-items-center">
-          <Col md={4}>
-            <Image src="https://picsum.photos/200/300" />
-          </Col>
-          <Col md={4}>
-            descrizione stanza Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatem incidunt ut temporibus obcaecati! Sequi temporibus molestias
-            ab rerum doloribus culpa, unde dolore aliquid distinctio quam quaerat est quisquam sit aliquam. Consequatur numquam quis, velit ratione sit,
-            eligendi magnam reiciendis reprehenderit cumque rerum obcaecati enim quia alias earum corrupti modi fugit ad tempore incidunt harum ut hic
-            doloremque repellat facilis. Distinctio? Earum eos aut nemo eum sapiente ad, optio expedita
-          </Col>
-          <Col
-            md={4}
-            className="d-flex flex-column justify-content-between"
-            style={{
-              height: "250px",
-            }}
-          >
-            <Button>prenota</Button>
-            <Button onClick={goDetailsPage}>details</Button>
-          </Col>
-        </Row>
+            </div>
+          </Dropdown.Menu>
+        </Dropdown>
+        <Button type="submit" variant="primary">
+          Search
+        </Button>
+      </Form>
+      <Container fluid>
+        {roomsFromDb.map((room) => (
+          <Row key={room.number}>
+            <Col md={4}>
+              <Image src="https://picsum.photos/200/300" />
+            </Col>
+            <Col md={4} className="d-flex flex-column justify-content-around">
+              <p>{room.description}</p>
+              <p>Capacity: {room.capacity}</p>
+              <p>Price: {room.price}$</p>
+            </Col>
+            <Col md={4} className="d-flex flex-column justify-content-around">
+              <Button>Prenota</Button>
+              <Button>Details</Button>
+            </Col>
+          </Row>
+        ))}
       </Container>
     </>
   );
