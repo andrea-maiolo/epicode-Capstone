@@ -120,7 +120,7 @@ const Home = function () {
         {roomsFromDb.map((room) => (
           <Row key={room.number}>
             <Col md={4}>
-              <Image src="https://picsum.photos/200/300" />
+              <Image fluid src={room.picture} />
             </Col>
             <Col md={4} className="d-flex flex-column justify-content-around">
               <p>{room.description}</p>
