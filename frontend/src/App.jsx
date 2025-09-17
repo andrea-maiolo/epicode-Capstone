@@ -6,6 +6,7 @@ import Home from "./components/homeUser/Home";
 import DetailsPage from "./components/Details/DetailsPage";
 import AdminPage from "./components/Admin/AdminPage";
 import Register from "./components/Register/Register";
+import BookingPage from "./components/BookingPage/BookingPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/detail" element={<DetailsPage />} />
         <Route path="/adminHome" element={<AdminPage />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/booking/:roomId" element={<BookingPage />} />
       </Routes>
     </BrowserRouter>
   );

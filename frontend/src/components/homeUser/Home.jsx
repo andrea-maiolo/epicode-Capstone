@@ -2,7 +2,7 @@ import { Button, ButtonGroup, Col, Container, Dropdown, Form, Image, Nav, Navbar
 import logo from "../../assets/logo.png";
 import { useState } from "react";
 import "./home.scss";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DateRangePicker from "../DatePicker/DateRPicker";
 
 const Home = function () {
@@ -36,8 +36,15 @@ const Home = function () {
     setter((prev) => Math.max(0, prev + value));
   };
 
-  const goDetailsPage = function () {
-    navigate("/detail");
+  const goDetailsPage = function (e) {
+    // navigate("/detail");
+    console.log(e);
+    console.log(room);
+  };
+
+  const goToBooking = function (room) {
+    console.log(room);
+    // navigate("/booking");
   };
 
   const handleSearch = function (e) {
@@ -128,8 +135,10 @@ const Home = function () {
               <p>Price: {room.price}$</p>
             </Col>
             <Col md={4} className="d-flex flex-column justify-content-around">
-              <Button>Prenota</Button>
-              <Button>Details</Button>
+              <Link to={"/booking/" + room.id} className="btn">
+                Book
+              </Link>
+              <Button onClick={goDetailsPage}>Details</Button>
             </Col>
           </Row>
         ))}
