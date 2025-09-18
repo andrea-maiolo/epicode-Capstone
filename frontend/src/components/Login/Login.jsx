@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Form, Button, Image, Container, Col, Row } from "react-bootstrap";
-import logo from "../../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 
 const Login = function () {
@@ -10,20 +9,6 @@ const Login = function () {
   const navigate = useNavigate();
   const API_URL = "http://localhost:3001/auth";
 
-  const registerUser = async function (userData) {
-    const res = await fetch(`${API_URL}/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    });
-
-    if (!res.ok) {
-      throw new Error("Registration failed");
-    }
-
-    return res.json();
-  };
-
   const loginUser = async function (credentials) {
     const res = await fetch(`${API_URL}/login`, {
       method: "POST",
@@ -32,69 +17,50 @@ const Login = function () {
     });
 
     if (!res.ok) {
-      throw new Error("Login failed");
+      console.log(res);
+      //need to get the error form the backend
     }
-
-    return res.json();
+    const data = await res.json();
+    console.log(data);
   };
 
-  const handleSubmit = async function (event) {
+  const handleSubmit = function (event) {
     event.preventDefault();
+    //aggiungi submit con tasto enter
 
     if (!email || !password) {
       alert("Please fill all fields!");
-      return; // stop submission
+      return;
     }
 
-    try {
-      const data = await loginUser({ email, password });
-      console.log(data);
-    } catch (error) {
-      setError(error.message);
-    }
-
+    loginUser({ email, password });
+    //prendo il token e faccio la fetch per homepage
     //navigate("/home");
   };
 
   const handleEmailChange = function (e) {
-    console.log(e.target.value);
     setEmail(e.target.value);
   };
 
   const handlePasswordChange = function (e) {
-    console.log(e.target.value);
     setPassword(e.target.value);
   };
 
-  const handleGoRegistrationPage = function () {
-    navigate("/register");
-  };
-
   return (
-    <Container fluid className="vh-100">
-      <Row className="h-100">
-        <Col className="d-flex align-items-center justify-content-center bg-white">
-          <Image src={logo} alt="Domus" fluid></Image>
-        </Col>
-        <Col className="d-flex align-items-center justify-content-center">
-          <Form className="w-50" onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label className="">Email address</Form.Label>
-              <Form.Control className="border-secondary" type="email" placeholder="gianni@gmail.com" value={email} onChange={(e) => handleEmailChange(e)} />
-            </Form.Group>
+    <Form className="w-50" onSubmit={handleSubmit}>
+      <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form.Label className="">Email address</Form.Label>
+        <Form.Control className="border-secondary" type="email" placeholder="example@gmail.com" value={email} onChange={(e) => handleEmailChange(e)} />
+      </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control className="border-secondary" type="password" placeholder="password" value={password} onChange={(e) => handlePasswordChange(e)} />
-            </Form.Group>
-            <Button variant="primary" type="submit">
-              Submit
-            </Button>
-            <Button onClick={handleGoRegistrationPage}>Register</Button>
-          </Form>
-        </Col>
-      </Row>
-    </Container>
+      <Form.Group className="mb-3" controlId="formBasicPassword">
+        <Form.Label>Password</Form.Label>
+        <Form.Control className="border-secondary" type="password" placeholder="password" value={password} onChange={(e) => handlePasswordChange(e)} />
+      </Form.Group>
+      <Button variant="primary" type="submit">
+        Submit
+      </Button>
+    </Form>
   );
 };
 
