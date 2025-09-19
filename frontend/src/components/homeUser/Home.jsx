@@ -1,8 +1,8 @@
-import { Button, ButtonGroup, Col, Container, Dropdown, Form, Image, Nav, Navbar, NavbarBrand, Row } from "react-bootstrap";
+import { Button, ButtonGroup, CardBody, Col, Container, Dropdown, Form, Image, Nav, Navbar, NavbarBrand, Row, Card } from "react-bootstrap";
 import logo from "../../assets/logo.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./home.scss";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import DateRangePicker from "../DatePicker/DateRPicker";
 
 const Home = function () {
@@ -12,13 +12,18 @@ const Home = function () {
   const [rooms, setRooms] = useState(1);
   const [roomsFromDb, setRoomsFromDb] = useState([]);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const API_URl = "http://localhost:3001";
 
-  const fetchRooms = async function () {
+  const fetchRooms = async function (token) {
     try {
-      const response = await fetch(`${API_URl}/rooms`);
+      const response = await fetch(`${API_URl}/rooms`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Could not get rooms");
@@ -36,21 +41,16 @@ const Home = function () {
     setter((prev) => Math.max(0, prev + value));
   };
 
-  const goDetailsPage = function (e) {
-    // navigate("/detail");
-    console.log(e);
-    console.log(room);
-  };
-
-  const goToBooking = function (room) {
-    console.log(room);
-    // navigate("/booking");
-  };
-
   const handleSearch = function (e) {
     e.preventDefault();
-    fetchRooms();
+    const token = localStorage.getItem("authToken");
+    fetchRooms(token);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    fetchRooms(token);
+  }, []);
 
   return (
     <>
@@ -60,13 +60,15 @@ const Home = function () {
             <img src={logo} alt="Domus" style={{ height: "40px" }} />
           </Navbar.Brand>
           <Nav className="ms-auto">
-            <Nav.Link href="userProfile">Profile</Nav.Link>
+            <Nav.Link href="userProfile" className="text-white fw-bold fs-5">
+              Profile
+            </Nav.Link>
           </Nav>
         </Container>
       </Navbar>
-      <div className="bg-primary text-white px-2">Browse our rooms</div>
+      <div className="bg-primary text-white px-2 fs-4 text-center">Your journey starts with the right room</div>
 
-      <Form className="d-flex align-items-center justify-content-center border border-danger" onSubmit={handleSearch}>
+      <Form className="d-flex align-items-center justify-content-center mb-3" onSubmit={handleSearch}>
         <DateRangePicker value={range} onChange={setRange} placeholder="select range of dates" />
         <Dropdown as={ButtonGroup}>
           <Button variant="outline-primary">
@@ -74,7 +76,6 @@ const Home = function () {
           </Button>
           <Dropdown.Toggle split variant="outline-primary" id="dropdown-split-basic" />
           <Dropdown.Menu style={{ minWidth: "250px" }}>
-            {/* Adults */}
             <div className="d-flex justify-content-between align-items-center p-2">
               <span>Adults</span>
               <div>
@@ -87,7 +88,7 @@ const Home = function () {
                 </Button>
               </div>
             </div>
-            {/* Children */}
+
             <div className="d-flex justify-content-between align-items-center p-2">
               <span>Children</span>
               <div>
@@ -101,7 +102,6 @@ const Home = function () {
                 </Button>
               </div>
             </div>
-            {/* Rooms */}
 
             <div className="d-flex justify-content-between align-items-center p-2">
               <span>Rooms</span>
@@ -123,25 +123,53 @@ const Home = function () {
           Search
         </Button>
       </Form>
+
       <Container fluid>
-        {roomsFromDb.map((room) => (
-          <Row key={room.number}>
+        {/* {roomsFromDb.map((room) => (
+          <Row key={room.number} className="mb-3">
             <Col md={4}>
-              <Image fluid src={room.picture} />
+              <Image fluid src={room.picture} className="rounded" />
             </Col>
-            <Col md={4} className="d-flex flex-column justify-content-around">
+            <Col md={8} className="d-flex flex-column justify-content-around">
               <p>{room.description}</p>
               <p>Capacity: {room.capacity}</p>
               <p>Price: {room.price}$</p>
-            </Col>
-            <Col md={4} className="d-flex flex-column justify-content-around">
-              <Link to={"/booking/" + room.id} className="btn">
-                Book
+              <Link to={"/booking/" + room.id} className="btn btn-primary w-25">
+                Book now
               </Link>
-              <Button onClick={goDetailsPage}>Details</Button>
             </Col>
           </Row>
-        ))}
+        ))} */}
+
+        <Row className="g-4">
+          {roomsFromDb.map((room) => (
+            <Col md={6}>
+              <div className="d-flex flex-column">
+                <Image
+                  src={room.picture}
+                  alt="alt"
+                  fluid
+                  className="rounded-4"
+                  // style={{
+                  //   width: "100%",
+                  //   maxWidth: "300px",
+                  //   objectFit: "cover",
+                  //   borderRadius: "8px",
+                  // }}
+                />
+                <div className="mt-3">
+                  <h5>{room.title}title</h5>
+                  <p>{room.description}</p>
+                  <p>Price: ${room.price}</p>
+                  <p>Capacity: {room.capacity}</p>
+                  <Link to={`/booking/${room.id}`}>
+                    <Button variant="primary">Book Now</Button>
+                  </Link>
+                </div>
+              </div>
+            </Col>
+          ))}
+        </Row>
       </Container>
     </>
   );

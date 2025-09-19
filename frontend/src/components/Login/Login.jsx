@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form, Button, Image, Container, Col, Row } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const Login = function () {
@@ -21,10 +21,10 @@ const Login = function () {
       //need to get the error form the backend
     }
     const data = await res.json();
-    console.log(data);
+    return data;
   };
 
-  const handleSubmit = function (event) {
+  const handleSubmit = async function (event) {
     event.preventDefault();
     //aggiungi submit con tasto enter
 
@@ -33,9 +33,9 @@ const Login = function () {
       return;
     }
 
-    loginUser({ email, password });
-    //prendo il token e faccio la fetch per homepage
-    //navigate("/home");
+    const dataFromFetch = await loginUser({ email, password });
+    localStorage.setItem("authToken", dataFromFetch.token);
+    navigate("/home");
   };
 
   const handleEmailChange = function (e) {

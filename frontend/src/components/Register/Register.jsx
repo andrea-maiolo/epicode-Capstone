@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form, Button, Image, Container, Col, Row } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const Register = function () {
@@ -8,7 +8,7 @@ const Register = function () {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [regSuccess, setRegSuccess] = useState(false);
   const API_URL = "http://localhost:3001/auth";
 
   const registerUser = async function (userData) {
@@ -24,11 +24,13 @@ const Register = function () {
     }
 
     const data = await res.json();
-    console.log(data);
+    setRegSuccess(true);
+    return data;
   };
 
-  const handleSubmit = async function (event) {
+  const handleSubmit = function (event) {
     event.preventDefault();
+    //add submit on enter
 
     if (!email || !password || !name || !surname) {
       alert("Please fill all fields!");
@@ -36,9 +38,6 @@ const Register = function () {
     }
 
     registerUser({ name, surname, email, password });
-
-    //prendo e vedo che fare
-    //navigate("/home");
   };
 
   const handleEmailChange = function (e) {
@@ -58,30 +57,39 @@ const Register = function () {
   };
 
   return (
-    <Form className="w-50" onSubmit={handleSubmit}>
-      <Form.Group className="mb-3" controlId="formBasicName">
-        <Form.Label className="">Name</Form.Label>
-        <Form.Control className="border-secondary" type="text" placeholder="gianni" value={name} onChange={(e) => handleNameChange(e)} />
-      </Form.Group>
+    <>
+      {!regSuccess && (
+        <Form className="w-50" onSubmit={handleSubmit}>
+          <Form.Group className="mb-3" controlId="formBasicName">
+            <Form.Label className="">Name</Form.Label>
+            <Form.Control className="border-secondary" type="text" placeholder="gianni" value={name} onChange={(e) => handleNameChange(e)} />
+          </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicSurname">
-        <Form.Label className="">Surname</Form.Label>
-        <Form.Control className="border-secondary" type="text" placeholder="nanni" value={surname} onChange={(e) => handleSurnameChange(e)} />
-      </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicSurname">
+            <Form.Label className="">Surname</Form.Label>
+            <Form.Control className="border-secondary" type="text" placeholder="nanni" value={surname} onChange={(e) => handleSurnameChange(e)} />
+          </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label className="">Email address</Form.Label>
-        <Form.Control className="border-secondary" type="email" placeholder="gianni@gmail.com" value={email} onChange={(e) => handleEmailChange(e)} />
-      </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label className="">Email address</Form.Label>
+            <Form.Control className="border-secondary" type="email" placeholder="gianni@gmail.com" value={email} onChange={(e) => handleEmailChange(e)} />
+          </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control className="border-secondary" type="password" placeholder="password" value={password} onChange={(e) => handlePasswordChange(e)} />
-      </Form.Group>
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
-    </Form>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Password</Form.Label>
+            <Form.Control className="border-secondary" type="password" placeholder="password" value={password} onChange={(e) => handlePasswordChange(e)} />
+          </Form.Group>
+          <Button variant="primary" type="submit">
+            Submit
+          </Button>
+        </Form>
+      )}
+      {regSuccess && (
+        <div>
+          <h2>Registration complete! Welcome aboard — log in and enjoy exploring our platform.</h2>
+        </div>
+      )}
+    </>
   );
 };
 

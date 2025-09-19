@@ -1,5 +1,3 @@
-// import { useNavigate } from "react-router-dom";
-
 import { useState } from "react";
 import { Button, Col, Container, Image, Row } from "react-bootstrap";
 import logo from "../../assets/logo.png";
