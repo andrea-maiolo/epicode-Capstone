@@ -35,6 +35,7 @@ const Login = function () {
 
     const dataFromFetch = await loginUser({ email, password });
     localStorage.setItem("authToken", dataFromFetch.token);
+    localStorage.setItem("uid", dataFromFetch.userId);
     navigate("/home");
   };
 
