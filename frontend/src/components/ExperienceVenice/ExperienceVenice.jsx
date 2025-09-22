@@ -7,14 +7,15 @@ import "./Experience.scss";
 
 const ExperienceVenice = () => {
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <div className="vh-100 d-flex flex-column">
+      {/* // style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}> */}
       <MyNav />
 
       {/* Main Section */}
-      <main style={{ flexGrow: 1 }}>
-        <div className="text-center" style={{ position: "relative", height: "80vh", overflow: "hidden" }}>
+      <main className="flex-grow-1">
+        <div className="text-center position-relative vh-100 overflow-hidden">
           <img src={gondola} alt="Venice canals" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          <div
+          {/* <div
             style={{
               position: "absolute",
               top: 0,
@@ -26,9 +27,11 @@ const ExperienceVenice = () => {
               justifyContent: "center",
               alignItems: "center",
             }}
-          >
+          > */}
+          <div className="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center">
             <div className="text-center text-white">
-              <h1 style={{ fontSize: "3rem", fontWeight: "bold" }}>Unforgettable Experiences in Venice</h1>
+              {/* <h1 style={{ fontSize: "3rem", fontWeight: "bold" }}> */}
+              <h1 className="fs-2 fw-bold">Unforgettable Experiences in Venice</h1>
               <p className="lead">Explore the magical city of canals and bridges.</p>
             </div>
           </div>
