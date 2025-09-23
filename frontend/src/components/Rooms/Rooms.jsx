@@ -1,11 +1,11 @@
 import { Button, ButtonGroup, CardBody, Col, Container, Dropdown, Form, Image, Nav, Navbar, NavbarBrand, Row, Card } from "react-bootstrap";
 import logo from "../../assets/logo.png";
 import { useEffect, useState } from "react";
-import "./home.scss";
+import "./Rooms.scss";
 import { Link } from "react-router-dom";
 import DateRangePicker from "../DatePicker/DateRPicker";
 
-const Home = function () {
+const Rooms = function () {
   const [range, setRange] = useState([new Date(), new Date()]);
   const [adults, setAdults] = useState(2);
   const [children, setChildren] = useState(0);
@@ -175,4 +175,4 @@ const Home = function () {
   );
 };
 
-export default Home;
+export default Rooms;

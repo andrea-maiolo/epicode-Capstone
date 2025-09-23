@@ -1,10 +1,9 @@
-import { Button, Card, Col, Container, Image, Nav, Navbar, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Image, Row } from "react-bootstrap";
 import "./MainPage.scss";
-import logo from "../../assets/logo.png";
 import magicRoom from "../../assets/magicRoom.jpg";
 import gondola from "../../assets/gondola.jpg";
 import restaurant from "../../assets/restaurant.jpg";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Footer from "../Footer/Footer";
 import MyNav from "../Navbar/MyNav";
 
@@ -12,7 +11,7 @@ const MainPage = function () {
   const navigate = useNavigate();
 
   const navigateRooms = function () {
-    navigate("/home");
+    navigate("/rooms");
   };
   const navigateExperience = function () {
     navigate("/experiences");
@@ -24,27 +23,6 @@ const MainPage = function () {
   return (
     <>
       <MyNav />
-
-      {/* <header className="header">
-        <Container className="d-flex align-items-center justify-content-between">
-          <Link href="*" className="d-flex align-items-center text-decoration text-white">
-            <Image src={logo} width="20px" height="20px" />
-            <span className="ms-2 fs-4 fw-bold text-white tracking-wide">Domus</span>
-          </Link>
-          <Link href="*" className="text-white text-decoration-none opacity-75 d-none d-sm-block">
-            Rooms
-          </Link>
-          <Link href="*" className="text-white text-decoration-none opacity-75 d-none d-sm-block">
-            Restaurant
-          </Link>
-          <Link href="*" className="text-white text-decoration-none opacity-75 d-none d-sm-block">
-            Experiences
-          </Link>
-          <Link href="*" className="text-white text-decoration-none opacity-75 d-none d-sm-block">
-            Contacts
-          </Link>
-        </Container>
-      </header> */}
       <section className="hero-section">
         <div className="hero-bg"></div>
         <div className="hero-overlay"></div>
@@ -53,22 +31,22 @@ const MainPage = function () {
           <p className="lead fw-light mb-4">
             Immerse yourself in timeless romance and vibrant culture, where every canal and piazza tells a story of Venice’s eternal charm.
           </p>
-          <Button className="btn-light fw-semibold px-5 py-3 rounded-pill shadow-sm">Explore Our Offerings</Button>
         </div>
       </section>
       <section className="py-5 py-md-5 bg-light text-center">
         <Container>
           <Col lg={8} className="mx-auto">
-            <h2 className="fs-2 fw-semibold mb-3 text-primary">A Tradition of Tranquility</h2>
+            <h2 className="fs-2 fw-semibold mb-3 text-primary">Your Private Venetian Palazzo</h2>
             <p className="lead text-muted mb-4">
-              Nestled amidst acres of pristine wilderness, our resort has been a sanctuary for generations. We invite you to disconnect from the everyday and
-              reconnect with nature, yourself, and your loved ones.
+              Beyond the throngs of St. Mark's lies a world of quiet luxury. Our doors open to a serene courtyard, a hidden gem where the hustle of the city
+              fades away. This is your personal retreat, a place to rediscover the art of doing nothing in one of the world's most captivating cities.
+              Experience the grandeur of Venice from a haven of pure, unadulterated calm.
             </p>
             <div className="bg-primary mx-auto" style={{ width: "5rem", height: "0.25rem", borderRadius: "999px" }}></div>
           </Col>
         </Container>
       </section>
-      <section className="py-5 py-md-5">
+      {/* <section className="py-5 py-md-5">
         <Container>
           <Row className="g-4">
             <Col md={6} lg={4}>
@@ -100,7 +78,7 @@ const MainPage = function () {
             </Col>
           </Row>
         </Container>
-      </section>
+      </section> */}
       {/* parte delle sections */}
       <div>
         <section className="vh-100 d-flex align-items-center section-1">

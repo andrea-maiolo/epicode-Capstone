@@ -13,10 +13,10 @@ const AdminPage = function () {
             <img src={logo} alt="Domus" style={{ height: "40px" }} />
           </Navbar.Brand>
           <Nav className="ms-auto">
-            <Nav.Link href="userProfile" className="text-white">
+            <Nav.Link href="roomManager" className="text-white">
               gestisci stanza
             </Nav.Link>
-            <Nav.Link href="userProfile" className="text-white">
+            <Nav.Link href="userManager" className="text-white">
               gestisci ospiti
             </Nav.Link>
           </Nav>

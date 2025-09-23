@@ -26,7 +26,6 @@ const Login = function () {
 
   const handleSubmit = async function (event) {
     event.preventDefault();
-    //aggiungi submit con tasto enter
 
     if (!email || !password) {
       alert("Please fill all fields!");
@@ -36,7 +35,7 @@ const Login = function () {
     const dataFromFetch = await loginUser({ email, password });
     localStorage.setItem("authToken", dataFromFetch.token);
     localStorage.setItem("uid", dataFromFetch.userId);
-    navigate("/home");
+    navigate("/mainPage");
   };
 
   const handleEmailChange = function (e) {
@@ -47,16 +46,37 @@ const Login = function () {
     setPassword(e.target.value);
   };
 
+  const handleKeyDown = function (e) {
+    if (e.key == "Enter") {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  };
+
   return (
     <Form className="w-50" onSubmit={handleSubmit}>
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label className="">Email address</Form.Label>
-        <Form.Control className="border-secondary" type="email" placeholder="example@gmail.com" value={email} onChange={(e) => handleEmailChange(e)} />
+        <Form.Control
+          className="border-secondary"
+          type="email"
+          placeholder="example@gmail.com"
+          value={email}
+          onChange={(e) => handleEmailChange(e)}
+          onKeyDown={handleKeyDown}
+        />
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formBasicPassword">
         <Form.Label>Password</Form.Label>
-        <Form.Control className="border-secondary" type="password" placeholder="password" value={password} onChange={(e) => handlePasswordChange(e)} />
+        <Form.Control
+          className="border-secondary"
+          type="password"
+          placeholder="password"
+          value={password}
+          onChange={(e) => handlePasswordChange(e)}
+          onKeyDown={handleKeyDown}
+        />
       </Form.Group>
       <Button variant="primary" type="submit">
         Submit

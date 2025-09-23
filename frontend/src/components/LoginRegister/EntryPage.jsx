@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Button, Col, Container, Image, Row } from "react-bootstrap";
 import logo from "../../assets/logo.png";
 import Login from "./Login";
-import Register from "../Register/Register";
+import Register from "./Register";
 
-const LandingPage = function () {
+const EntryPage = function () {
   const [activeComponent, setActiveComponent] = useState(null);
 
   return (
@@ -52,4 +52,4 @@ const LandingPage = function () {
   );
 };
 
-export default LandingPage;
+export default EntryPage;

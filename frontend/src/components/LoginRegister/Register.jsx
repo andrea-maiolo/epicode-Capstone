@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 
 const Register = function () {
   const [email, setEmail] = useState("");
@@ -30,7 +29,6 @@ const Register = function () {
 
   const handleSubmit = function (event) {
     event.preventDefault();
-    //add submit on enter
 
     if (!email || !password || !name || !surname) {
       alert("Please fill all fields!");
@@ -38,6 +36,13 @@ const Register = function () {
     }
 
     registerUser({ name, surname, email, password });
+  };
+
+  const handleKeyDown = function (e) {
+    if (e.key == "Enter") {
+      e.preventDefault();
+      handleSubmit(e);
+    }
   };
 
   const handleEmailChange = function (e) {
@@ -62,22 +67,50 @@ const Register = function () {
         <Form className="w-50" onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formBasicName">
             <Form.Label className="">Name</Form.Label>
-            <Form.Control className="border-secondary" type="text" placeholder="gianni" value={name} onChange={(e) => handleNameChange(e)} />
+            <Form.Control
+              className="border-secondary"
+              type="text"
+              placeholder="gianni"
+              value={name}
+              onKeyDown={handleKeyDown}
+              onChange={(e) => handleNameChange(e)}
+            />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicSurname">
             <Form.Label className="">Surname</Form.Label>
-            <Form.Control className="border-secondary" type="text" placeholder="nanni" value={surname} onChange={(e) => handleSurnameChange(e)} />
+            <Form.Control
+              className="border-secondary"
+              type="text"
+              placeholder="nanni"
+              value={surname}
+              onKeyDown={handleKeyDown}
+              onChange={(e) => handleSurnameChange(e)}
+            />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label className="">Email address</Form.Label>
-            <Form.Control className="border-secondary" type="email" placeholder="gianni@gmail.com" value={email} onChange={(e) => handleEmailChange(e)} />
+            <Form.Control
+              className="border-secondary"
+              type="email"
+              placeholder="gianni@gmail.com"
+              value={email}
+              onKeyDown={handleKeyDown}
+              onChange={(e) => handleEmailChange(e)}
+            />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Password</Form.Label>
-            <Form.Control className="border-secondary" type="password" placeholder="password" value={password} onChange={(e) => handlePasswordChange(e)} />
+            <Form.Control
+              className="border-secondary"
+              type="password"
+              placeholder="password"
+              value={password}
+              onKeyDown={handleKeyDown}
+              onChange={(e) => handlePasswordChange(e)}
+            />
           </Form.Group>
           <Button variant="primary" type="submit">
             Submit
