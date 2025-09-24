@@ -8,17 +8,20 @@ const EntryPage = function () {
   const [activeComponent, setActiveComponent] = useState(null);
 
   return (
-    <Container fluid className="vh-100">
-      <Row className="h-100">
-        <Col className="d-flex align-items-center justify-content-center">
-          <Image src={logo} alt="Domus" fluid />
+    <Container fluid className="vh-100 d-flex align-items-center bg-secondary">
+      <Row className="d-flex flex-column flex-md-row">
+        <Col className="d-flex align-items-center justify-content-center col-12 col-md-6">
+          <div className="w-75 w-md-100">
+            <Image src={logo} alt="Domus" fluid />
+          </div>
         </Col>
-        <Col className="d-flex flex-column justify-content-center">
+        <Col className="d-flex flex-column justify-content-center col-12 col-md-6">
           {!activeComponent && (
             <>
-              <h1 className="display-4 fw-bold mb-4">Book Smarter, Travel Better.</h1>
+              <h1 className="display-4 fw-bold mb-4">Experience the Palazzo</h1>
               <p className="lead text-muted mb-5">
-                Our platform helps you discover, compare, and book your perfect stay — all in one place. Simple, fast, and reliable.
+                Our exclusive portal simplifies your stay, from effortless booking to curated experiences, all in one place. Discover the soul of Venice with
+                simple, fast, and reliable service.
               </p>
               <div className="d-flex gap-3">
                 <Button className="btn btn-primary btn-lg px-4 rounded-pill shadow" onClick={() => setActiveComponent("login")}>

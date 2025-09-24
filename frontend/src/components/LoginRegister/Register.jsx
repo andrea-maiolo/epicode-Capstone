@@ -64,7 +64,7 @@ const Register = function () {
   return (
     <>
       {!regSuccess && (
-        <Form className="w-50" onSubmit={handleSubmit}>
+        <Form className="w-100 w-md-50" onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formBasicName">
             <Form.Label className="">Name</Form.Label>
             <Form.Control

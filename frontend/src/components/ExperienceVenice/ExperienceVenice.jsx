@@ -1,82 +1,79 @@
-import React from "react";
-import { Navbar, Container, Nav, Card, Row, Col } from "react-bootstrap";
-import gondola from "../../assets/gondola.jpg";
-import Footer from "../Footer/Footer";
+import { Container, Card, Row, Col } from "react-bootstrap";
+import MyFooter from "../Footer/MyFooter";
 import MyNav from "../Navbar/MyNav";
-import "./Experience.scss";
+import "./ExperienceVenice.scss";
 
 const ExperienceVenice = () => {
+  const experiences = [
+    {
+      title: "Gondola Rides",
+      text: "Glide through the Grand Canal and secret waterways on an authentic Venetian gondola.",
+    },
+    {
+      title: "Historical Tours",
+      text: "Explore St. Mark's Square, the Doge's Palace, and ancient bridges with a knowledgeable guide.",
+    },
+    {
+      title: "Venetian Cuisine",
+      text: "Indulge in authentic Italian food, from fresh seafood to traditional cicchetti and wine.",
+    },
+    {
+      title: "Murano Glass Workshop",
+      text: "Discover the centuries-old art of glassblowing with a hands-on workshop on the island of Murano.",
+    },
+    {
+      title: "Burano Lace Making",
+      text: "Visit the colorful island of Burano and learn the delicate craft of traditional lace making.",
+    },
+    {
+      title: "Carnival Mask Painting",
+      text: "Unleash your creativity and paint your own traditional Venetian carnival mask to take home.",
+    },
+    {
+      title: "Hidden Gems Walking Tour",
+      text: "Wander off the beaten path to discover Venice's secluded courtyards and enchanting alleys.",
+    },
+    {
+      title: "Art History Excursion",
+      text: "Delve into Venice's rich artistic heritage with a guided tour of its most famous galleries and churches.",
+    },
+  ];
   return (
-    <div className="vh-100 d-flex flex-column">
-      {/* // style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}> */}
-      <MyNav />
-
-      {/* Main Section */}
-      <main className="flex-grow-1">
-        <div className="text-center position-relative vh-100 overflow-hidden">
-          <img src={gondola} alt="Venice canals" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          {/* <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              backgroundColor: "rgba(6, 6, 9, 0.4)",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          > */}
-          <div className="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center">
-            <div className="text-center text-white">
-              {/* <h1 style={{ fontSize: "3rem", fontWeight: "bold" }}> */}
-              <h1 className="fs-2 fw-bold">Unforgettable Experiences in Venice</h1>
-              <p className="lead">Explore the magical city of canals and bridges.</p>
-            </div>
-          </div>
+    <>
+      <section className="hero-section">
+        <div className="hero-bg-experience"></div>
+        <div className="hero-overlay"></div>
+        <div className="hero-content">
+          <h1 className="display-4 fw-bold mb-3 mb-md-4">Unforgettable Experiences in Venice</h1>
+          <p className="lead fw-light mb-4">Explore the magical city of canals and bridges.</p>
         </div>
+      </section>
 
-        {/* Experiences Section */}
-        <Container className="sectionStyle">
-          <Row className="justify-content-center text-center mb-5">
-            <Col md={8}>
-              <h2 className="titleStyle">Discover the Magic of Venice</h2>
-              <p className="lead">From romantic gondola rides to historical walking tours, Venice offers a unique adventure at every turn.</p>
-            </Col>
-          </Row>
-          <Row className="g-4 ">
-            <Col md={4}>
-              <Card className="text-center h-100 cardStyle">
-                <Card.Body>
-                  <Card.Title>Gondola Rides</Card.Title>
-                  <Card.Text>Glide through the Grand Canal and secret waterways on an authentic Venetian gondola.</Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={4}>
-              <Card className="text-center h-100 cardStyle">
-                <Card.Body>
-                  <Card.Title>Historical Tours</Card.Title>
-                  <Card.Text>Explore St. Mark's Square, the Doge's Palace, and ancient bridges with a knowledgeable guide.</Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={4}>
-              <Card className="text-center h-100 cardStyle">
-                <Card.Body>
-                  <Card.Title>Venetian Cuisine</Card.Title>
-                  <Card.Text>Indulge in authentic Italian food, from fresh seafood to traditional cicchetti and wine.</Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
+      <section className="py-5 py-md-5 bg-light text-center">
+        <Container>
+          <Col lg={8} className="mx-auto">
+            <h2 className="fs-2 fw-semibold mb-3 text-primary">Discover the Magic of Venice</h2>
+            <p className="lead text-muted mb-4">From romantic gondola rides to historical walking tours, Venice offers a unique adventure at every turn.</p>
+            <div className="bg-primary mx-auto" style={{ width: "5rem", height: "0.25rem", borderRadius: "999px" }}></div>
+          </Col>
         </Container>
-      </main>
+      </section>
 
-      {/* Footer */}
-      <Footer />
-    </div>
+      <Container className="py-5 ">
+        <Row className="g-4">
+          {experiences.map((experience, index) => (
+            <Col sm={12} md={6} key={index}>
+              <Card className="text-center h-100 shadow-sm rounded-4 border-2" border="primary">
+                <Card.Body className="p-4">
+                  <Card.Title className="fs-5 fw-semibold">{experience.title}</Card.Title>
+                  <Card.Text className="text-muted">{experience.text}</Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
+    </>
   );
 };
 

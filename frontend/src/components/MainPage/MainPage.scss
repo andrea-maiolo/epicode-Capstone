@@ -1,9 +1,3 @@
-body {
-  // font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  color: #333;
-  background-color: #fff;
-}
-
 .hero-section {
   position: relative;
   height: 100vh;
@@ -43,20 +37,6 @@ body {
   padding: 1rem;
 }
 
-.header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 10;
-  padding: 1.5rem;
-}
-
-// extra sections
-.special-text {
-  color: #060609;
-}
-
 .section-1 {
   background-color: #8fccc1;
 }
@@ -69,19 +49,11 @@ body {
   background-color: #8fccc1;
 }
 
-/* Ensure the image fills its container while maintaining aspect ratio */
-// .img-fluid {
-//   max-width: 100%;
-//   height: auto;
-// }
-
-/* On mobile, stack content above image for aesthetic consistency */
 .row.flex-column-reverse {
   flex-direction: column-reverse;
 }
 
 .custom-button {
-  /* Pill shape with a border */
   border-radius: 50px;
   background-color: transparent;
   border: 2px solid #562692;
@@ -90,19 +62,16 @@ body {
 }
 
 .custom-button:hover {
-  /* Fill with color on hover */
   background-color: #562692;
   color: white;
-  border-color: #562692; /* Maintain border color */
+  border-color: #562692;
 }
 
 .custom-button:focus {
-  /* Remove Bootstrap's default focus outline */
   box-shadow: none;
   outline: none;
 }
 
-/* Desktop layout (md and up) */
 @media (min-width: 768px) {
   .row.flex-md-row {
     flex-direction: row;

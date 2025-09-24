@@ -4,7 +4,7 @@ import magicRoom from "../../assets/magicRoom.jpg";
 import gondola from "../../assets/gondola.jpg";
 import restaurant from "../../assets/restaurant.jpg";
 import { useNavigate } from "react-router-dom";
-import Footer from "../Footer/Footer";
+import MyFooter from "../Footer/MyFooter";
 import MyNav from "../Navbar/MyNav";
 
 const MainPage = function () {
@@ -22,7 +22,6 @@ const MainPage = function () {
 
   return (
     <>
-      <MyNav />
       <section className="hero-section">
         <div className="hero-bg"></div>
         <div className="hero-overlay"></div>
@@ -33,6 +32,7 @@ const MainPage = function () {
           </p>
         </div>
       </section>
+
       <section className="py-5 py-md-5 bg-light text-center">
         <Container>
           <Col lg={8} className="mx-auto">
@@ -46,45 +46,12 @@ const MainPage = function () {
           </Col>
         </Container>
       </section>
-      {/* <section className="py-5 py-md-5">
-        <Container>
-          <Row className="g-4">
-            <Col md={6} lg={4}>
-              <Card className="border-0 rounded shadow-sm">
-                <Card.Img className="img-top" src="https://placehold.co/600x400/D1D5DB/1F2937?text=placeholder" />
-                <Card.Body>
-                  <Card.Title className="text-primary">title goes here</Card.Title>
-                  <Card.Text className="text-muted">text of the card</Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={6} lg={4}>
-              <Card className="border-0 rounded shadow-sm">
-                <Card.Img className="img-top" src="https://placehold.co/600x400/D1D5DB/1F2937?text=placeholder" />
-                <Card.Body>
-                  <Card.Title className="text-primary">title goes here</Card.Title>
-                  <Card.Text className="text-muted">text of the card</Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={6} lg={4}>
-              <Card className="border-0 rounded shadow-sm">
-                <Card.Img className="img-top" src="https://placehold.co/600x400/D1D5DB/1F2937?text=placeholder" />
-                <Card.Body>
-                  <Card.Title className="text-primary">title goes here</Card.Title>
-                  <Card.Text className="text-muted">text of the card</Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
-      </section> */}
-      {/* parte delle sections */}
+
       <div>
-        <section className="vh-100 d-flex align-items-center section-1">
+        <section className="min-vh-100 d-flex align-items-center section-1">
           <Container fluid>
             <Row className="g-0 flex-column-reverse flex-md-row">
-              <Col md={6} className="d-flex align-items-center p-5 special-text">
+              <Col md={6} className="d-flex align-items-center p-5">
                 <div>
                   <h2>Discover Our Rooms</h2>
                   <p>
@@ -96,20 +63,20 @@ const MainPage = function () {
                   </Button>
                 </div>
               </Col>
-              <Col md={6} className="d-flex align-items-center justify-content-center p-md-5">
-                <Image src={magicRoom} className="img-fluid rounded-4 shadow-lg w-100 h-100 object-fit-cover" alt="Placeholder image for Section 1" />
+              <Col md={6} className="d-flex align-items-center justify-content-center p-md-5 mt-4 mt-md-0">
+                <Image src={magicRoom} className="img-fluid rounded-4 shadow-lg object-fit-cover" alt="One of our best rooms" />
               </Col>
             </Row>
           </Container>
         </section>
 
-        <section className="vh-100 d-flex align-items-center section-2">
+        <section className="min-vh-100 d-flex align-items-center section-2">
           <Container fluid>
             <Row className="g-0 flex-column-reverse flex-md-row">
-              <Col md={6} className="d-flex align-items-center justify-content-center p-md-5">
-                <Image src={gondola} className="img-fluid rounded-4 shadow-lg w-100 h-100 object-fit-cover" alt="Placeholder image for Section 2" />
+              <Col md={6} className="d-flex align-items-center justify-content-center p-md-5 mb-4 mb-md-0">
+                <Image src={gondola} className="img-fluid rounded-4 shadow-lg object-fit-cover" alt="Gondola" />
               </Col>
-              <Col md={6} className="d-flex align-items-center special-text p-5">
+              <Col md={6} className="d-flex align-items-center p-5">
                 <div>
                   <h2>Experiences</h2>
                   <p>
@@ -125,10 +92,10 @@ const MainPage = function () {
           </Container>
         </section>
 
-        <section className="vh-100 d-flex align-items-center section-3">
+        <section className="min-vh-100 d-flex align-items-center section-3">
           <Container fluid>
             <Row className="g-0 flex-column-reverse flex-md-row">
-              <Col md={6} className="d-flex align-items-center p-5 special-text">
+              <Col md={6} className="d-flex align-items-center p-5">
                 <div>
                   <h2>Our Restaurant</h2>
                   <p>
@@ -140,14 +107,13 @@ const MainPage = function () {
                   </Button>
                 </div>
               </Col>
-              <Col md={6} className="d-flex align-items-center justify-content-center p-md-5">
-                <Image src={restaurant} className="img-fluid rounded-4 shadow-lg w-100 h-100 object-fit-cover" alt="Placeholder image for Section 1" />
+              <Col md={6} className="d-flex align-items-center justify-content-center p-md-5 mt-4 mt-md-0">
+                <Image src={restaurant} className="img-fluid rounded-4 shadow-lg object-fit-cover" alt="Our restaurant" />
               </Col>
             </Row>
           </Container>
         </section>
       </div>
-      <Footer />
     </>
   );
 };
