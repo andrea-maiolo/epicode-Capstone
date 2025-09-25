@@ -4,7 +4,7 @@ import logo from "../../assets/logo.png";
 import Login from "./Login";
 import Register from "./Register";
 
-const EntryPage = function () {
+const EntryPage = function ({ setUserRole }) {
   const [activeComponent, setActiveComponent] = useState(null);
 
   return (
@@ -35,7 +35,7 @@ const EntryPage = function () {
           )}
           {activeComponent === "login" && (
             <div>
-              <Login />
+              <Login setUserRole={setUserRole} />
               <Button className="btn-primary mt-3" onClick={() => setActiveComponent("register")}>
                 Register
               </Button>

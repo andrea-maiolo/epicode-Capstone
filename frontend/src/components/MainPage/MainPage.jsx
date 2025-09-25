@@ -22,6 +22,8 @@ const MainPage = function () {
 
   return (
     <>
+      <MyNav />
+
       <section className="hero-section">
         <div className="hero-bg"></div>
         <div className="hero-overlay"></div>
@@ -114,6 +116,8 @@ const MainPage = function () {
           </Container>
         </section>
       </div>
+
+      <MyFooter />
     </>
   );
 };

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-const Login = function () {
+const Login = function ({ setUserRole }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -33,9 +33,22 @@ const Login = function () {
     }
 
     const dataFromFetch = await loginUser({ email, password });
+    console.log(dataFromFetch);
+
     localStorage.setItem("authToken", dataFromFetch.token);
     localStorage.setItem("uid", dataFromFetch.userId);
-    navigate("/mainPage");
+
+    localStorage.setItem("role", "user");
+    setUserRole("user");
+
+    if (dataFromFetch.url == "/adminHome") {
+      console.log("same");
+      localStorage.setItem("role", "admin");
+      console.log("Login successful. Stored role in localStorage:");
+      setUserRole("admin");
+    }
+
+    navigate(dataFromFetch.url);
   };
 
   const handleEmailChange = function (e) {

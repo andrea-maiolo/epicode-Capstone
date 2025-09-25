@@ -11,7 +11,7 @@ const NotFoundPage = () => {
       <h1 className="display-1 fw-bold mb-4">404</h1>
       <h2 className="display-4 mb-3">Page not Found</h2>
       <h4 className="lead text-muted mb-5">The page you are looking for is not here.</h4>
-      <Link to="/" className="text-decoration-none fw-semibold text-secondary">
+      <Link to="/mainPage" className="text-decoration-none fw-semibold text-secondary">
         Go Back Home
       </Link>
     </Container>

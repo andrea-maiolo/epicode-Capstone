@@ -40,6 +40,7 @@ const ExperienceVenice = () => {
   ];
   return (
     <>
+      <MyNav />
       <section className="hero-section">
         <div className="hero-bg-experience"></div>
         <div className="hero-overlay"></div>
@@ -73,6 +74,8 @@ const ExperienceVenice = () => {
           ))}
         </Row>
       </Container>
+
+      <MyFooter />
     </>
   );
 };

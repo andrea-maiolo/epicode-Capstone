@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import "./Rooms.scss";
 import { Link } from "react-router-dom";
 import MyNav from "../Navbar/MyNav";
+import MyFooter from "../Footer/MyFooter";
 
 const Rooms = function () {
   const [roomsFromDb, setRoomsFromDb] = useState([]);
@@ -136,6 +137,7 @@ const Rooms = function () {
 
   return (
     <>
+      <MyNav />
       <section className="hero-section">
         <div className="hero-bg-rooms"></div>
         <div className="hero-overlay"></div>
@@ -267,6 +269,8 @@ const Rooms = function () {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <MyFooter />
     </>
   );
 };

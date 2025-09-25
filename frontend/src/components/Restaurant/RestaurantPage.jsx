@@ -26,6 +26,8 @@ const RestaurantPage = () => {
   ];
   return (
     <>
+      <MyNav />
+
       <section className="hero-section">
         <div className="hero-bg-restaurant"></div>
         <div className="hero-overlay"></div>
@@ -110,6 +112,8 @@ const RestaurantPage = () => {
           ))}
         </Row>
       </Container>
+
+      <MyFooter />
     </>
   );
 };
