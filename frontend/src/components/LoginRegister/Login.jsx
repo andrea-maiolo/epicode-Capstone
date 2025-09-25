@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form, Button, Spinner, Alert } from "react-bootstrap";
+import { Form, Button, Spinner, Alert, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const Login = function ({ setUserRole }) {
@@ -87,7 +87,7 @@ const Login = function ({ setUserRole }) {
       <div>
         <Container fluid>
           <Alert variant="danger" className="mt-4">
-            Error loading: {error.message}
+            Error login, sorry try again
           </Alert>
         </Container>
       </div>

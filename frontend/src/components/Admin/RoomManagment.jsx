@@ -154,7 +154,7 @@ const RoomManagment = function () {
     const token = localStorage.getItem("authToken");
     const roomData = {
       number: roomNumber,
-      description: roomCapacity,
+      description: roomDescription,
       price: roomPrice,
       capacity: roomCapacity,
     };

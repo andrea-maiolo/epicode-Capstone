@@ -2,24 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Spinner, Alert, Card, Table } from "react-bootstrap";
 import AdminNav from "./AdmnNav/AdminNav";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import "./Admin.scss"; // Ensure this file is imported for your custom styles
+import "./Admin.scss";
 
-// --- Helper Functions (usually placed outside the component or in a separate file) ---
-
-// Gets the start of the week (Sunday or Monday, depending on locale)
 const getWeekStart = (date) => {
   const d = new Date(date);
   const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust to start on Monday
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
   d.setDate(diff);
   d.setHours(0, 0, 0, 0);
   return d;
 };
 
-// Formats a date to YYYY-MM-DD
 const formatDateKey = (date) => date.toISOString().split("T")[0];
 
-// Generates an array of 7 dates for the current week
 const getWeekDates = (startDate) => {
   const dates = [];
   let current = new Date(startDate);
@@ -30,8 +25,6 @@ const getWeekDates = (startDate) => {
   return dates;
 };
 
-// --- Main Component ---
-
 const AdminBookingCalendar = function () {
   const [rooms, setRooms] = useState([]);
   const [bookings, setBookings] = useState([]);
@@ -41,7 +34,6 @@ const AdminBookingCalendar = function () {
 
   const API_URL = "http://localhost:3001";
 
-  // Fetch Rooms and Bookings
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     const fetchAdminData = async () => {
@@ -50,7 +42,6 @@ const AdminBookingCalendar = function () {
           headers: { Authorization: `Bearer ${token}` },
         });
         const bookingsResponse = await fetch(`${API_URL}/booking`, {
-          // ASSUMPTION: You have an admin endpoint for all bookings
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -61,8 +52,16 @@ const AdminBookingCalendar = function () {
         const roomsData = await roomsResponse.json();
         const bookingsData = await bookingsResponse.json();
 
-        setRooms(roomsData.content || roomsData); // Adjust based on your API response structure (e.g., if you use content)
-        setBookings(bookingsData.content || bookingsData);
+        console.log(roomsData, bookingsData);
+
+        const parsedBookings = bookingsData.content.map((booking) => ({
+          ...booking,
+          checkin: new Date(booking.checkin),
+          checkout: new Date(booking.checkout),
+        }));
+
+        setRooms(roomsData.content);
+        setBookings(bookingsData.content);
       } catch (err) {
         setError(err);
       } finally {
@@ -75,8 +74,8 @@ const AdminBookingCalendar = function () {
   const weekDates = getWeekDates(currentWeekStart);
 
   const getBookingForDay = (roomId, date) => {
-    const dateKey = formatDateKey(date);
-    return bookings.find((booking) => booking.roomId === roomId && dateKey >= booking.checkin && dateKey <= booking.checkout);
+    const dayTimestamp = date.getTime();
+    return bookings.find((booking) => booking.room.id === roomId && dayTimestamp >= new Date(booking.checkin) && dayTimestamp <= new Date(booking.checkout));
   };
 
   const handleWeekChange = (direction) => {
@@ -115,7 +114,7 @@ const AdminBookingCalendar = function () {
     <div className="admin-calendar-page">
       <AdminNav />
       <Container fluid className="py-4 px-md-5">
-        <h2 className="display-5 mb-4 admin-calendar-heading">Booking Calendar View</h2>
+        <h2 className="display-5 mb-4  mt-5 admin-calendar-heading">Booking Calendar View</h2>
 
         <div className="d-flex justify-content-between align-items-center mb-3 p-3 calendar-controls shadow-sm">
           <Button variant="secondary" onClick={() => handleWeekChange("prev")}>
@@ -129,7 +128,6 @@ const AdminBookingCalendar = function () {
           </Button>
         </div>
 
-        {/* The Calendar Grid */}
         <Card className="calendar-grid-card">
           <Table responsive bordered className="booking-table mb-0">
             <thead>
@@ -145,21 +143,12 @@ const AdminBookingCalendar = function () {
             <tbody>
               {rooms.map((room) => (
                 <tr key={room.id}>
-                  <td className="room-label sticky-col">
-                    {room.description} (Cap: {room.capacity})
-                  </td>
+                  <td className="room-label sticky-col">{room.number} </td>
                   {weekDates.map((date, index) => {
                     const booking = getBookingForDay(room.id, date);
                     return (
                       <td key={index} className={`calendar-cell ${booking ? "booked" : "available"}`}>
-                        {booking ? (
-                          <div className="booking-info" title={`Booked by User ID: ${booking.userId}`}>
-                            B. {booking.userId}
-                          </div>
-                        ) : (
-                          // Optional: Add an action here, e.g., a small "Quick Book" button
-                          <span className="available-label">Available</span>
-                        )}
+                        {booking ? <div className="text-danger">Booked</div> : <span>Available</span>}
                       </td>
                     );
                   })}

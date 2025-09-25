@@ -46,6 +46,29 @@ const Rooms = function () {
     }
   };
 
+  const fetchFilterRooms = async function () {
+    const token = localStorage.getItem("authToken");
+    console.log("running");
+    try {
+      const response = await fetch(`${API_URl}/rooms/available?checkin=${checkinDate}&checkout=${checkoutDate}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      setRoomsFromDb(data);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   const handleGuestsChange = (type, action) => {
     if (type === "adults") {
       setAdults((prev) => (action === "increment" ? prev + 1 : Math.max(0, prev - 1)));
@@ -65,7 +88,7 @@ const Rooms = function () {
 
     if (!showErrorAlert) {
       console.log("Form submitted:", { adults, children, checkinDate, checkoutDate });
-      // Here you would typically handle the booking or API call
+      fetchFilterRooms();
     } else {
       setShowErrorAlert(true);
     }
@@ -139,9 +162,9 @@ const Rooms = function () {
     return (
       <div>
         <MyNav />
-        <Container fluid>
+        <Container fluid style={{ marginTop: "75px" }}>
           <Alert variant="danger" className="mt-4">
-            Error loading: {error.message}
+            Error fetching rooms sorry
           </Alert>
         </Container>
       </div>

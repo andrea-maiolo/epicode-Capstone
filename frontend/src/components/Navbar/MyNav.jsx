@@ -22,9 +22,6 @@ const MyNav = function () {
               <Nav.Link href="/experiences" className="text-white text-decoration-none opacity-75">
                 Experiences
               </Nav.Link>
-              <Nav.Link href="/contact" className="text-white text-decoration-none opacity-75">
-                Contact
-              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
