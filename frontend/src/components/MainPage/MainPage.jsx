@@ -1,4 +1,4 @@
-import { Button, Card, Col, Container, Image, Row } from "react-bootstrap";
+import { Button, Col, Container, Image, Row } from "react-bootstrap";
 import "./MainPage.scss";
 import magicRoom from "../../assets/magicRoom.jpg";
 import gondola from "../../assets/gondola.jpg";

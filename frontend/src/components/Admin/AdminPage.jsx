@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Spinner, Alert, Card, Table } from "react-bootstrap";
 import AdminNav from "./AdmnNav/AdminNav";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
@@ -52,14 +52,6 @@ const AdminBookingCalendar = function () {
         const roomsData = await roomsResponse.json();
         const bookingsData = await bookingsResponse.json();
 
-        console.log(roomsData, bookingsData);
-
-        const parsedBookings = bookingsData.content.map((booking) => ({
-          ...booking,
-          checkin: new Date(booking.checkin),
-          checkout: new Date(booking.checkout),
-        }));
-
         setRooms(roomsData.content);
         setBookings(bookingsData.content);
       } catch (err) {
@@ -111,12 +103,12 @@ const AdminBookingCalendar = function () {
   }
 
   return (
-    <div className="admin-calendar-page">
+    <div>
       <AdminNav />
       <Container fluid className="py-4 px-md-5">
-        <h2 className="display-5 mb-4  mt-5 admin-calendar-heading">Booking Calendar View</h2>
+        <h2 className="display-5 mb-4 mt-5">Booking Calendar View</h2>
 
-        <div className="d-flex justify-content-between align-items-center mb-3 p-3 calendar-controls shadow-sm">
+        <div className="d-flex justify-content-between align-items-center mb-3 p-3  shadow-sm">
           <Button variant="secondary" onClick={() => handleWeekChange("prev")}>
             <FaChevronLeft className="me-2" /> Previous Week
           </Button>
@@ -128,11 +120,11 @@ const AdminBookingCalendar = function () {
           </Button>
         </div>
 
-        <Card className="calendar-grid-card">
-          <Table responsive bordered className="booking-table mb-0">
+        <Card>
+          <Table responsive bordered className="mb-0">
             <thead>
               <tr>
-                <th className="room-header sticky-col">Room</th>
+                <th>Room</th>
                 {weekDates.map((date, index) => (
                   <th key={index} className={formatDateKey(date) === formatDateKey(new Date()) ? "today" : ""}>
                     {getDayName(date)}
@@ -143,14 +135,10 @@ const AdminBookingCalendar = function () {
             <tbody>
               {rooms.map((room) => (
                 <tr key={room.id}>
-                  <td className="room-label sticky-col">{room.number} </td>
+                  <td>{room.number} </td>
                   {weekDates.map((date, index) => {
                     const booking = getBookingForDay(room.id, date);
-                    return (
-                      <td key={index} className={`calendar-cell ${booking ? "booked" : "available"}`}>
-                        {booking ? <div className="text-danger">Booked</div> : <span>Available</span>}
-                      </td>
-                    );
+                    return <td key={index}>{booking ? <div className="text-danger">Booked</div> : <span className="bg-secondary">Available</span>}</td>;
                   })}
                 </tr>
               ))}

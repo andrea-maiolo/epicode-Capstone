@@ -82,7 +82,7 @@ const Register = function () {
       <div>
         <Container fluid>
           <Alert variant="danger" className="mt-4">
-            Error loading: {error.message}
+            Error loading: {error}
           </Alert>
         </Container>
       </div>

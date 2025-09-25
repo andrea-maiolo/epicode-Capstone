@@ -20,7 +20,6 @@ function App() {
   };
 
   const [userRole, setUserRole] = useState(localStorage.getItem("role") || "user");
-  console.log(userRole);
 
   return (
     <BrowserRouter>

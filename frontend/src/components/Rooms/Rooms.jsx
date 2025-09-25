@@ -48,7 +48,6 @@ const Rooms = function () {
 
   const fetchFilterRooms = async function () {
     const token = localStorage.getItem("authToken");
-    console.log("running");
     try {
       const response = await fetch(`${API_URl}/rooms/available?checkin=${checkinDate}&checkout=${checkoutDate}`, {
         method: "GET",
@@ -87,7 +86,6 @@ const Rooms = function () {
     }
 
     if (!showErrorAlert) {
-      console.log("Form submitted:", { adults, children, checkinDate, checkoutDate });
       fetchFilterRooms();
     } else {
       setShowErrorAlert(true);
@@ -164,7 +162,7 @@ const Rooms = function () {
         <MyNav />
         <Container fluid style={{ marginTop: "75px" }}>
           <Alert variant="danger" className="mt-4">
-            Error fetching rooms sorry
+            Error fetching rooms sorry. {error}
           </Alert>
         </Container>
       </div>

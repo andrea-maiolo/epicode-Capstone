@@ -39,7 +39,7 @@ const RoomManagment = function () {
       const data = await response.json();
       setRoomsFromDb(data.content);
     } catch (err) {
-      setError(err);
+      setError(err.message);
     } finally {
       setIsLoading(false);
     }
@@ -64,7 +64,7 @@ const RoomManagment = function () {
       fetchAllRooms(token);
       return datasave;
     } catch (err) {
-      setError(err);
+      setError(err.message);
     }
   };
 
@@ -134,12 +134,10 @@ const RoomManagment = function () {
         throw new Error("File upload failed");
       }
 
-      const data = await response.json();
       handlePictureClose();
       fetchAllRooms(token);
-      return data;
     } catch (err) {
-      setError("Failed to upload image.");
+      setError(err.message);
     }
   };
 
@@ -179,7 +177,6 @@ const RoomManagment = function () {
   };
 
   const handleDeleteRoom = function () {
-    console.log("deleting");
     const token = localStorage.getItem("authToken");
     fetchDelete(token);
     setRoomSelected(null);
@@ -240,7 +237,7 @@ const RoomManagment = function () {
         <AdminNav />
         <Container fluid className="manager-main">
           <Alert variant="danger" className="mt-4">
-            Error loading: {error.message}
+            Error loading: {error}
           </Alert>
         </Container>
       </div>
@@ -262,13 +259,13 @@ const RoomManagment = function () {
               <Modal.Body>
                 <Form.Group controlId="roomCreation" onSubmit={handleSubmit}>
                   <Form.Label>Room number</Form.Label>
-                  <Form.Control type="text" placeholder="Enter item name" value={roomNumber} onChange={(e) => setRoomNumber(e.target.value)} />
+                  <Form.Control type="text" placeholder="Enter room number" value={roomNumber} onChange={(e) => setRoomNumber(e.target.value)} />
                   <Form.Label>Room description</Form.Label>
-                  <Form.Control type="text" placeholder="Enter item name" value={roomDescription} onChange={(e) => setRoomDescription(e.target.value)} />
+                  <Form.Control type="text" placeholder="Enter room description" value={roomDescription} onChange={(e) => setRoomDescription(e.target.value)} />
                   <Form.Label>Room price</Form.Label>
-                  <Form.Control type="text" placeholder="Enter item name" value={roomPrice} onChange={(e) => setRoomPrice(e.target.value)} />
+                  <Form.Control type="text" placeholder="Enter room price" value={roomPrice} onChange={(e) => setRoomPrice(e.target.value)} />
                   <Form.Label>Room capacity</Form.Label>
-                  <Form.Control type="text" placeholder="Enter item name" value={roomCapacity} onChange={(e) => setRoomCapacity(e.target.value)} />
+                  <Form.Control type="text" placeholder="Enter room capacity" value={roomCapacity} onChange={(e) => setRoomCapacity(e.target.value)} />
                 </Form.Group>
               </Modal.Body>
               <Modal.Footer>
@@ -374,16 +371,16 @@ const RoomManagment = function () {
             <Form.Group controlId="formFile" className="mb-3">
               <Form.Label>Select new picture</Form.Label>
               <Form.Control type="file" onChange={handleFileChange} accept="image/*" />
-              {selectedFile && <p className="mt-2">Selected file: **{selectedFile.name}**</p>}
+              {selectedFile && <p className="mt-2">Selected file: {selectedFile.name}</p>}
             </Form.Group>
           )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="danger" onClick={handlePictureClose}>
-            cancel
+            Cancel
           </Button>
           <Button variant="success" onClick={fetchUploadPicture} disabled={!selectedFile}>
-            go ahed
+            Upload
           </Button>
         </Modal.Footer>
       </Modal>

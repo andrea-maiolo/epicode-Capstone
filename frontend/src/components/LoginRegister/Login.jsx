@@ -40,7 +40,6 @@ const Login = function ({ setUserRole }) {
     }
 
     const dataFromFetch = await loginUser({ email, password });
-    console.log(dataFromFetch);
 
     localStorage.setItem("authToken", dataFromFetch.token);
     localStorage.setItem("uid", dataFromFetch.userId);
@@ -49,9 +48,7 @@ const Login = function ({ setUserRole }) {
     setUserRole("user");
 
     if (dataFromFetch.url == "/adminHome") {
-      console.log("same");
       localStorage.setItem("role", "admin");
-      console.log("Login successful. Stored role in localStorage:");
       setUserRole("admin");
     }
 
@@ -87,7 +84,7 @@ const Login = function ({ setUserRole }) {
       <div>
         <Container fluid>
           <Alert variant="danger" className="mt-4">
-            Error login, sorry try again
+            Error login, sorry try again. {error}
           </Alert>
         </Container>
       </div>

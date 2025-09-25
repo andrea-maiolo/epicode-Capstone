@@ -11,7 +11,6 @@ const UserManagment = function () {
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    console.log("fetching");
     const fetchUsers = async () => {
       try {
         const response = await fetch("http://localhost:3001/users", {
@@ -28,7 +27,7 @@ const UserManagment = function () {
         const data = await response.json();
         setUsers(data.content);
       } catch (err) {
-        setError(err);
+        setError(err.message);
       } finally {
         setIsLoading(false);
       }
@@ -41,7 +40,7 @@ const UserManagment = function () {
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
         <Spinner animation="border" variant="primary" />
-        <span className="ms-3 text-primary">Loading user directory...</span>
+        <span className="ms-3 text-primary">Loading...</span>
       </div>
     );
   }
@@ -52,7 +51,7 @@ const UserManagment = function () {
         <AdminNav />
         <Container fluid className="manager-main">
           <Alert variant="danger" className="mt-4">
-            Error loading user data: {error.message}
+            Error loading user data {error}
           </Alert>
         </Container>
       </div>
@@ -82,7 +81,7 @@ const UserManagment = function () {
                         </ListGroup.Item>
                       </ListGroup>
                     </Card.Text>
-                    <Button variant="primary" href={`mailto:${user.email}`} className="mt-3 card-action-button">
+                    <Button variant="primary" href={`mailto:${user.email}`} className="mt-3">
                       <FaEnvelope className="me-2" /> Send Email
                     </Button>
                   </Card.Body>
