@@ -1,27 +1,34 @@
 import { useState } from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Spinner, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const Login = function ({ setUserRole }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const API_URL = "http://localhost:3001/auth";
 
   const loginUser = async function (credentials) {
-    const res = await fetch(`${API_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(credentials),
-    });
+    setIsLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(credentials),
+      });
 
-    if (!res.ok) {
-      console.log(res);
-      //need to get the error form the backend
+      if (!res.ok) {
+        throw new Error("Could not log you in, sorry try again");
+      }
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
-    const data = await res.json();
-    return data;
   };
 
   const handleSubmit = async function (event) {
@@ -65,6 +72,27 @@ const Login = function ({ setUserRole }) {
       handleSubmit(e);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <Spinner animation="border" variant="primary" />
+        <span className="ms-3 text-primary">Loading...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>
+        <Container fluid>
+          <Alert variant="danger" className="mt-4">
+            Error loading: {error.message}
+          </Alert>
+        </Container>
+      </div>
+    );
+  }
 
   return (
     <Form className="w-50" onSubmit={handleSubmit}>

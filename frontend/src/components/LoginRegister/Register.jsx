@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Spinner, Alert } from "react-bootstrap";
 
 const Register = function () {
   const [email, setEmail] = useState("");
@@ -7,24 +7,31 @@ const Register = function () {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [regSuccess, setRegSuccess] = useState(false);
   const API_URL = "http://localhost:3001/auth";
 
   const registerUser = async function (userData) {
-    const res = await fetch(`${API_URL}/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    });
+    setIsLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
 
-    if (!res.ok) {
-      console.log(res);
-      //you ll need the error from the backend
+      if (!res.ok) {
+        throw new Error("Could not register you, sorry try again");
+      }
+
+      const data = await res.json();
+      setRegSuccess(true);
+      return data;
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
-
-    const data = await res.json();
-    setRegSuccess(true);
-    return data;
   };
 
   const handleSubmit = function (event) {
@@ -60,6 +67,27 @@ const Register = function () {
   const handleSurnameChange = function (e) {
     setSurname(e.target.value);
   };
+
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <Spinner animation="border" variant="primary" />
+        <span className="ms-3 text-primary">Loading...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>
+        <Container fluid>
+          <Alert variant="danger" className="mt-4">
+            Error loading: {error.message}
+          </Alert>
+        </Container>
+      </div>
+    );
+  }
 
   return (
     <>

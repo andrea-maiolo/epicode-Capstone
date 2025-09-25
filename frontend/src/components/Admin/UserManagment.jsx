@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import { Container, Nav, Navbar } from "react-bootstrap";
-import logo from "../../assets/logo.png";
+import { Button, Card, Col, Container, ListGroup, Row, Spinner } from "react-bootstrap";
+import AdminNav from "./AdmnNav/AdminNav";
+import "./Admin.scss";
+import { FaEnvelope } from "react-icons/fa";
 
 const UserManagment = function () {
   const [users, setUsers] = useState([]);
@@ -21,11 +23,9 @@ const UserManagment = function () {
         });
 
         if (!response.ok) {
-          console.log(response);
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        console.log(data);
         setUsers(data.content);
       } catch (err) {
         setError(err);
@@ -38,46 +38,62 @@ const UserManagment = function () {
   }, []);
 
   if (isLoading) {
-    return <div>Loading users...</div>;
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <Spinner animation="border" variant="primary" />
+        <span className="ms-3 text-primary">Loading user directory...</span>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return (
+      <div>
+        <AdminNav />
+        <Container fluid className="manager-main">
+          <Alert variant="danger" className="mt-4">
+            Error loading user data: {error.message}
+          </Alert>
+        </Container>
+      </div>
+    );
   }
 
   return (
     <div>
-      <Navbar className="bg-primary">
-        <Container fluid>
-          <Navbar.Brand>
-            <img src={logo} alt="Domus" style={{ height: "40px" }} />
-          </Navbar.Brand>
-          <Nav className="ms-auto">
-            <Nav.Link href="roomManager" className="text-white">
-              gestisci stanza
-            </Nav.Link>
-            <Nav.Link href="userManager" className="text-white">
-              gestisci ospiti
-            </Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
-      <h2>User Directory</h2>
-      {users.length > 0 ? (
-        <ul>
-          {users.map((user) => (
-            <li key={user.id}>
-              <h3>
-                Full Name: {user.name} {user.surname}
-              </h3>
-              <p>Email: {user.email}</p>
-              <a href={`mailto:${user.email}`}>Send Email</a>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No users found.</p>
-      )}
+      <AdminNav />
+      <Container fluid className="manager-main py-5 px-md-5">
+        <h2 className="display-4 mb-4 user-managment-heading">User Directory</h2>
+        {users.length > 0 ? (
+          <Row className="g-4">
+            {users.map((user) => (
+              <Col key={user.id} lg={4} md={6} sm={12}>
+                <Card className="user-card h-100 shadow-sm">
+                  <Card.Body>
+                    <div className="d-flex align-items-center mb-3">
+                      <Card.Title className="mb-0 user-name">
+                        {user.name} {user.surname}
+                      </Card.Title>
+                    </div>
+                    <Card.Text>
+                      <ListGroup variant="flush">
+                        <ListGroup.Item className="card-detail-item">
+                          <strong className="detail-label">Email:</strong> {user.email}
+                        </ListGroup.Item>
+                      </ListGroup>
+                    </Card.Text>
+                    <Button variant="primary" href={`mailto:${user.email}`} className="mt-3 card-action-button">
+                      <FaEnvelope className="me-2" /> Send Email
+                    </Button>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        ) : (
+          <p className="mt-4 text-secondary">No users found.</p>
+        )}
+      </Container>
     </div>
   );
 };

@@ -1,0 +1,38 @@
+.manager-main {
+  margin-top: 75px;
+}
+
+.user-managment-page {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  color: #060609;
+}
+
+.user-managment-heading {
+  font-weight: 700;
+  padding-bottom: 0.5rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.user-card {
+  border: none;
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  .user-name {
+    font-weight: 600;
+  }
+
+  .card-detail-item {
+    background-color: transparent;
+    .detail-label {
+      font-weight: 500;
+      margin-right: 0.5rem;
+    }
+  }
+}

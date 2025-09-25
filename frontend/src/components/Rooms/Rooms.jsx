@@ -1,7 +1,6 @@
-import { Button, Col, Container, Form, Image, Row, Alert, Modal } from "react-bootstrap";
+import { Button, Col, Container, Form, Image, Row, Alert, Modal, Spinner } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import "./Rooms.scss";
-import { Link } from "react-router-dom";
 import MyNav from "../Navbar/MyNav";
 import MyFooter from "../Footer/MyFooter";
 
@@ -15,6 +14,7 @@ const Rooms = function () {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const API_URl = "http://localhost:3001";
 
@@ -35,13 +35,14 @@ const Rooms = function () {
 
       if (!response.ok) {
         throw new Error("Could not get rooms");
-        //get it and set it
       }
 
       const data = await response.json();
       setRoomsFromDb(data.content);
     } catch (error) {
-      setError(error.messaage);
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -90,16 +91,10 @@ const Rooms = function () {
   };
 
   const handleProceedBooking = async function () {
-    // Logic to proceed with the booking (e.g., API call, navigation)
-    console.log("Booking confirmed for room:", selectedRoom);
-    console.log("Guests:", adults, "adults,", children, "children");
-    console.log("Dates:", checkinDate, "to", checkoutDate);
-    // Here you would make an API call to your backend
     try {
       const token = localStorage.getItem("authToken");
       const userId = localStorage.getItem("uid");
 
-      // Data to be sent to the backend
       const bookingData = {
         checkin: checkinDate,
         checkout: checkoutDate,
@@ -117,23 +112,41 @@ const Rooms = function () {
       });
 
       if (!response.ok) {
-        // Handle HTTP errors
         throw new Error(`Booking failed with status: ${response.status}`);
       }
 
       const bookingConfirmation = await response.json();
-      console.log("Booking successful:", bookingConfirmation);
-
-      // Optional: Reset state or navigate to a confirmation page
       setShowModal(false);
       window.alert("Your room has been successfully booked!");
+      return bookingConfirmation;
     } catch (error) {
-      console.error("Error during booking:", error);
-      window.alert(`An error occurred: ${error.message}`);
+      setError(error.message);
     }
   };
 
   const handleCloseModal = () => setShowModal(false);
+
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <Spinner animation="border" variant="primary" />
+        <span className="ms-3 text-primary">Loading...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>
+        <MyNav />
+        <Container fluid>
+          <Alert variant="danger" className="mt-4">
+            Error loading: {error.message}
+          </Alert>
+        </Container>
+      </div>
+    );
+  }
 
   return (
     <>
