@@ -70,7 +70,7 @@ const Register = function () {
 
   if (isLoading) {
     return (
-      <div className="d-flex justify-content-center align-items-center vh-100">
+      <div className="d-flex justify-content-center align-items-center">
         <Spinner animation="border" variant="primary" />
         <span className="ms-3 text-primary">Loading...</span>
       </div>
