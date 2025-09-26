@@ -110,7 +110,6 @@ You must have the following software installed:
     npm run dev
     # The client will typically open at http://localhost:5173
     ```
-**For the backend you can find the folder here https://github.com/andrea-maiolo/epicode-Capstone-backend**
 ---
 
 ## 📡 API Endpoints
@@ -127,6 +126,7 @@ The API is served from the backend (default: `http://localhost:3001`).
 | `/booking`         | `GET`  | Retrieve all bookings (Admin View).               | Required (Admin)        |
 | `/admin/rooms`     | `POST` | Create or update a room (Admin Management).       | Required (Admin)        |
 
+**For the backend you can find the folder here https://github.com/andrea-maiolo/epicode-Capstone-backend**
 ---
 
 ## 👤 Development & Contribution
