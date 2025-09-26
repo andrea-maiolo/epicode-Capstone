@@ -110,7 +110,7 @@ You must have the following software installed:
     npm run dev
     # The client will typically open at http://localhost:5173
     ```
-
+**For the backend you can find the folder here https://github.com/andrea-maiolo/epicode-Capstone-backend**
 ---
 
 ## 📡 API Endpoints
