@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
-$body-color: #060609;
+$text: #060609;
 $body-bg: #f5f5f5;
 $primary: #562692;
 $secondary: #8fccc1;
@@ -27,4 +27,4 @@ h6 {
   font-family: $font-family-headings;
 }
 
-@import "bootstrap/scss/bootstrap";
+@import "/node_modules/bootstrap/scss/bootstrap.scss";
