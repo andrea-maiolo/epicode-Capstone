@@ -54,6 +54,7 @@ const AdminBookingCalendar = function () {
 
         setRooms(roomsData.content);
         setBookings(bookingsData.content);
+        console.log(bookingsData.content);
       } catch (err) {
         setError(err);
       } finally {
@@ -126,9 +127,7 @@ const AdminBookingCalendar = function () {
               <tr>
                 <th>Room</th>
                 {weekDates.map((date, index) => (
-                  <th key={index} className={formatDateKey(date) === formatDateKey(new Date()) ? "today" : ""}>
-                    {getDayName(date)}
-                  </th>
+                  <th key={index}>{getDayName(date)}</th>
                 ))}
               </tr>
             </thead>
@@ -145,6 +144,36 @@ const AdminBookingCalendar = function () {
             </tbody>
           </Table>
         </Card>
+
+        <Row className="g-4 mt-3">
+          {bookings.map((booking) => (
+            <Col xs={12} sm={6} lg={4} key={booking.id}>
+              <Card className="h-100 shadow-sm border-primary">
+                <Card.Header as="h5" className="bg-primary text-white">
+                  Booking ID: {booking.id}
+                </Card.Header>
+                <Card.Body>
+                  <Card.Title className="text-decoration-underline mb-3">Room: {booking.room.number}</Card.Title>
+                  <p>🗓️ Check-in: {booking.checkin}</p>
+                  <p>➡️ Check-out: {booking.checkout}</p>
+                </Card.Body>
+
+                <Card.Footer>
+                  <h6>Guest Details</h6>
+                  <p className="mb-1">
+                    👤 Name: {booking.user.name} {booking.user.surname}
+                  </p>
+                  <p className="mb-0">
+                    📧 Email:{" "}
+                    <a href={`mailto:${booking.user.email}`} target="_blank">
+                      {booking.user.email}
+                    </a>
+                  </p>
+                </Card.Footer>
+              </Card>
+            </Col>
+          ))}
+        </Row>
       </Container>
     </div>
   );
