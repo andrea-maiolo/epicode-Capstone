@@ -8,7 +8,7 @@ const EntryPage = function ({ setUserRole }) {
   const [activeComponent, setActiveComponent] = useState(null);
 
   return (
-    <Container fluid className="vh-100 d-flex align-items-center bg-secondary">
+    <Container fluid className="vh-100 d-flex align-items-center justify-content-center bg-secondary">
       <Row className="d-flex flex-column flex-md-row">
         <Col className="d-flex align-items-center justify-content-center col-12 col-md-6">
           <div className="w-75 w-md-100">

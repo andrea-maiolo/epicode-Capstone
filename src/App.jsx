@@ -10,25 +10,55 @@ import UserManagment from "./components/Admin/UserManagment";
 import RoomManagment from "./components/Admin/RoomManagment";
 import NotFoundPage from "./components/NotFoundPage/NotFoundPage";
 import { useState } from "react";
+import UnauthPage from "./components/UnauthPage/UnauthPage";
 
 function App() {
   const ProtectedRoute = ({ children, requiredRole, userRole }) => {
     if (userRole !== requiredRole) {
-      return <Navigate to="/*" replace />;
+      return <Navigate to="/unauth" replace />;
     }
     return children;
   };
 
-  const [userRole, setUserRole] = useState(localStorage.getItem("role") || "user");
+  const [userRole, setUserRole] = useState(localStorage.getItem("role") || "");
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<EntryPage setUserRole={setUserRole} />} />
-        <Route path="/mainPage" element={<MainPage />} />
-        <Route path="/rooms" element={<Rooms />} />
-        <Route path="/restaurant" element={<RestaurantPage />} />
-        <Route path="/experiences" element={<ExperienceVenice />} />
+
+        <Route
+          path="/mainPage"
+          element={
+            <ProtectedRoute requiredRole="user" userRole={userRole}>
+              <MainPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/rooms"
+          element={
+            <ProtectedRoute requiredRole="user" userRole={userRole}>
+              <Rooms />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/restaurant"
+          element={
+            <ProtectedRoute requiredRole="user" userRole={userRole}>
+              <RestaurantPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/experiences"
+          element={
+            <ProtectedRoute requiredRole="user" userRole={userRole}>
+              <ExperienceVenice />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/adminHome"
           element={
@@ -54,6 +84,7 @@ function App() {
           }
         />
         <Route path="*" element={<NotFoundPage />} />
+        <Route path="/unauth" element={<UnauthPage />} />
       </Routes>
     </BrowserRouter>
   );

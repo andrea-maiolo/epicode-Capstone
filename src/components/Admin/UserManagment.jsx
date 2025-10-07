@@ -8,33 +8,60 @@ const UserManagment = function () {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [page, setPage] = useState(0);
+  const [totalP, setTotalP] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch("http://localhost:3001/users", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setUsers(data.content);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchUsers();
   }, []);
+
+  const fetchUsers = async () => {
+    console.log("run");
+    console.log(page);
+
+    const token = localStorage.getItem("authToken");
+    try {
+      const response = await fetch(`http://localhost:3001/users?pageNumber=${page}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setUsers(data.content);
+      console.log(data);
+      setTotalP(data.totalPages);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (page == 0) {
+      return;
+    } else {
+      setPage(page - 1);
+      console.log(page);
+      // fetchUsers();
+    }
+  };
+
+  const handleNextPage = () => {
+    if (page == totalP - 1) {
+      return;
+    } else {
+      setPage(page + 1);
+
+      fetchUsers();
+    }
+  };
 
   if (isLoading) {
     return (
@@ -63,6 +90,13 @@ const UserManagment = function () {
       <AdminNav />
       <Container fluid className="manager-main py-5 px-md-5">
         <h2 className="display-4 mb-4 user-managment-heading">User Directory</h2>
+        <div className="d-flex justify-content-end mb-4">
+          <Button className="me-2" onClick={handlePrevPage}>
+            Prev
+          </Button>
+          <p className="me-2 pt-2 m-0">{page}</p>
+          <Button onClick={handleNextPage}>Next</Button>
+        </div>
         {users.length > 0 ? (
           <Row className="g-4">
             {users.map((user) => (

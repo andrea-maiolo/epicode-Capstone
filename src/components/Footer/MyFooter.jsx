@@ -13,6 +13,9 @@ const Footer = function () {
                 maiolo.m.2@gmail.com
               </a>
             </p>
+            <p>
+              If you are curious about my other projects, you can find them here <a>https://andrea-maiolo.github.io/portfolio/</a>
+            </p>
           </Col>
         </Row>
       </Container>

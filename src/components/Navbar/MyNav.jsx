@@ -13,13 +13,13 @@ const MyNav = function () {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
             <Nav>
-              <Nav.Link href="/rooms" className="text-white text-decoration-none opacity-75">
+              <Nav.Link href="/rooms" className="text-primary text-decoration-none">
                 Rooms
               </Nav.Link>
-              <Nav.Link href="/restaurant" className="text-white text-decoration-none opacity-75">
+              <Nav.Link href="/restaurant" className="text-primary text-decoration-none">
                 Restaurant
               </Nav.Link>
-              <Nav.Link href="/experiences" className="text-white text-decoration-none opacity-75">
+              <Nav.Link href="/experiences" className="text-primary text-decoration-none">
                 Experiences
               </Nav.Link>
             </Nav>

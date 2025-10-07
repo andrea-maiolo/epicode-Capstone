@@ -17,28 +17,6 @@ const RoomManagment = function () {
   const [modalPicture, setModalPicture] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const addresses = [
-    "Residenza del Doge, Calle del Paradiso, 4512, Castello, 30122",
-    "Ca' Foscari Retreat, Dorsoduro, 301, Dorsoduro, 30123",
-    "S. Marco Bell Suite, Salizada San Moisè, 1876, San Marco, 30124",
-    "Ponte Vecchio Room, Ruga dei Oresi, 489, San Polo, 30125",
-    "L'Arsenale Lodge, Fondamenta dei Furlani, 6682, Castello, 30122",
-    "Laguna View, Rio Terà San Leonardo, 1455, Cannaregio, 30121",
-    "Giudecca Breeze, Isola della Giudecca, 99, Dorsoduro, 30133",
-    "Tintoretto Loft, Campo dei Frari, 3009, San Polo, 30125",
-    "Rialto Market Studio, Calle del Sturion, 5324, San Polo, 30125",
-    "Campo Stella Room, Campiello Querini Stampalia, 5252, Castello, 30122",
-    "Goldoni Apartment, Calle del Teatro, 1964, San Marco, 30124",
-    "Canal Grande View, Fondamenta Santa Lucia, 288, Cannaregio, 30121",
-    "Santa Croce Hub, Piazzale Roma, 40, Santa Croce, 30135",
-    "Peggy's Garden Apt, Calle della Chiesa, 2741, Dorsoduro, 30123",
-    "Miracoli Suite, Calle dei Miracoli, 5922, Cannaregio, 30121",
-    "The Ghetto Flat, Campiello delle Scuole, 2902, Cannaregio, 30121",
-    "Fenice Penthouse, Corte del Lovo, 234, San Marco, 30124",
-    "San Stae Room, Fondamenta Ca' Pesaro, 1731, Santa Croce, 30135",
-    "Calle Larga Unit, Calle Larga San Marco, 47, San Marco, 30124",
-    "Isola San Pietro, Calle de le Muneghe, 87, Castello, 30122",
-  ];
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -329,7 +307,7 @@ const RoomManagment = function () {
         </Row>
 
         <Row className="g-4">
-          {roomsFromDb.map((room, index) => (
+          {roomsFromDb.map((room) => (
             <Col md={6} key={room.id}>
               <div className="d-flex flex-column h-100">
                 <div className="rounded-4 overflow-hidden image-container">
@@ -339,7 +317,6 @@ const RoomManagment = function () {
                   <p>{room.description}</p>
                   <p>Price: {room.price}&euro; per night</p>
                   <p>Capacity: {room.capacity}</p>
-                  <p>Address: {addresses[index]}</p>
                   <p>Status: {room.available.toString()}</p>
                   <Button className="me-1" variant="primary" onClick={() => handleUpdateShow(room)}>
                     Update
