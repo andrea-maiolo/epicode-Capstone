@@ -15,17 +15,19 @@ const Rooms = function () {
   const [showModal, setShowModal] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [totalP, setTotalP] = useState(null);
 
   const API_URl = "http://localhost:3001";
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    fetchRooms(token);
-  }, []);
+    fetchRooms();
+  }, [page]);
 
-  const fetchRooms = async function (token) {
+  const fetchRooms = async function () {
+    const token = localStorage.getItem("authToken");
     try {
-      const response = await fetch(`${API_URl}/rooms`, {
+      const response = await fetch(`${API_URl}/rooms?pageNumber=${page}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -39,6 +41,7 @@ const Rooms = function () {
 
       const data = await response.json();
       setRoomsFromDb(data.content);
+      setTotalP(data.totalPages);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -146,6 +149,24 @@ const Rooms = function () {
   };
 
   const handleCloseModal = () => setShowModal(false);
+
+  const handlePrevPage = () => {
+    if (page == 0) {
+      return;
+    } else {
+      setPage(page - 1);
+      fetchUsers();
+    }
+  };
+
+  const handleNextPage = () => {
+    if (page == totalP - 1) {
+      return;
+    } else {
+      setPage(page + 1);
+      fetchUsers();
+    }
+  };
 
   if (isLoading) {
     return (
@@ -273,6 +294,13 @@ const Rooms = function () {
             );
           })}
         </Row>
+        <div className="d-flex justify-content-end mb-4">
+          <Button className="me-2" onClick={handlePrevPage}>
+            Prev
+          </Button>
+          <p className="me-2 pt-2 m-0">{page + 1}</p>
+          <Button onClick={handleNextPage}>Next</Button>
+        </div>
       </Container>
 
       <Modal show={showModal} onHide={handleCloseModal}>

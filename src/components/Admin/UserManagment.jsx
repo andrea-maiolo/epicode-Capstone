@@ -16,9 +16,6 @@ const UserManagment = function () {
   }, [page]);
 
   const fetchUsers = async () => {
-    // console.log("run");
-    console.log(page);
-
     const token = localStorage.getItem("authToken");
     try {
       const response = await fetch(`http://localhost:3001/users?pageNumber=${page}`, {
@@ -34,7 +31,6 @@ const UserManagment = function () {
       }
       const data = await response.json();
       setUsers(data.content);
-      console.log(data);
       setTotalP(data.totalPages);
     } catch (err) {
       setError(err.message);
@@ -48,7 +44,6 @@ const UserManagment = function () {
       return;
     } else {
       setPage(page - 1);
-      console.log(page + "from btn");
       fetchUsers();
     }
   };
@@ -58,8 +53,6 @@ const UserManagment = function () {
       return;
     } else {
       setPage(page + 1);
-      console.log(page + "from btn");
-
       fetchUsers();
     }
   };
