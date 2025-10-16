@@ -13,10 +13,10 @@ const UserManagment = function () {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [page]);
 
   const fetchUsers = async () => {
-    console.log("run");
+    // console.log("run");
     console.log(page);
 
     const token = localStorage.getItem("authToken");
@@ -48,8 +48,8 @@ const UserManagment = function () {
       return;
     } else {
       setPage(page - 1);
-      console.log(page);
-      // fetchUsers();
+      console.log(page + "from btn");
+      fetchUsers();
     }
   };
 
@@ -58,6 +58,7 @@ const UserManagment = function () {
       return;
     } else {
       setPage(page + 1);
+      console.log(page + "from btn");
 
       fetchUsers();
     }
@@ -94,7 +95,7 @@ const UserManagment = function () {
           <Button className="me-2" onClick={handlePrevPage}>
             Prev
           </Button>
-          <p className="me-2 pt-2 m-0">{page}</p>
+          <p className="me-2 pt-2 m-0">{page + 1}</p>
           <Button onClick={handleNextPage}>Next</Button>
         </div>
         {users.length > 0 ? (
