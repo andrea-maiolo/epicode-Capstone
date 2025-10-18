@@ -26,8 +26,9 @@ const Rooms = function () {
 
   const fetchRooms = async function () {
     const token = localStorage.getItem("authToken");
+    setIsLoading(true);
     try {
-      const response = await fetch(`${API_URl}/rooms?pageNumber=${page}`, {
+      const response = await fetch(`${API_URl}/rooms?pageNumber=${page}&checkin=${checkinDate}&checkout=${checkoutDate}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -41,33 +42,12 @@ const Rooms = function () {
 
       const data = await response.json();
       setRoomsFromDb(data.content);
+      console.log(data);
       setTotalP(data.totalPages);
     } catch (error) {
       setError(error.message);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const fetchFilterRooms = async function () {
-    const token = localStorage.getItem("authToken");
-    try {
-      const response = await fetch(`${API_URl}/rooms/available?checkin=${checkinDate}&checkout=${checkoutDate}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const data = await response.json();
-      setRoomsFromDb(data);
-    } catch (error) {
-      setError(error.message);
     }
   };
 
@@ -89,7 +69,7 @@ const Rooms = function () {
     }
 
     if (!showErrorAlert) {
-      fetchFilterRooms();
+      fetchRooms();
     } else {
       setShowErrorAlert(true);
     }
@@ -155,7 +135,6 @@ const Rooms = function () {
       return;
     } else {
       setPage(page - 1);
-      fetchUsers();
     }
   };
 
@@ -164,16 +143,33 @@ const Rooms = function () {
       return;
     } else {
       setPage(page + 1);
-      fetchUsers();
     }
   };
 
   if (isLoading) {
     return (
-      <div className="d-flex justify-content-center align-items-center vh-100">
-        <Spinner animation="border" variant="primary" />
-        <span className="ms-3 text-primary">Loading...</span>
-      </div>
+      <>
+        <MyNav />
+        <section className="hero-section">
+          <div className="hero-bg-rooms"></div>
+          <div className="hero-overlay"></div>
+          <div className="hero-content">
+            <h1 className="display-4 fw-bold mb-3 mb-md-4">Browse Our Wonderful Rooms</h1>
+          </div>
+        </section>
+        <section className="py-5 py-md-5 bg-light text-center">
+          <Container>
+            <Col lg={8} className="mx-auto">
+              <h2 className="fs-2 fw-semibold mb-3 text-primary">Your journey starts with the right room</h2>
+              <div className="bg-primary mx-auto" style={{ width: "5rem", height: "0.25rem", borderRadius: "999px" }}></div>
+            </Col>
+          </Container>
+        </section>
+        <div className="d-flex justify-content-center align-items-center vh-100">
+          <Spinner animation="border" variant="primary" />
+          <span className="ms-3 text-primary">Loading...</span>
+        </div>
+      </>
     );
   }
 
@@ -268,7 +264,14 @@ const Rooms = function () {
         </Form>
       </Container>
 
-      <Container fluid>
+      <Container fluid className="mb-2">
+        <div className="d-flex justify-content-end mb-4">
+          <Button className="me-2" onClick={handlePrevPage}>
+            Prev
+          </Button>
+          <p className="me-2 pt-2 m-0">{page + 1}</p>
+          <Button onClick={handleNextPage}>Next</Button>
+        </div>
         <Row className="g-4">
           {roomsFromDb.map((room, index) => {
             let row = Math.floor(index / 2);
@@ -294,13 +297,6 @@ const Rooms = function () {
             );
           })}
         </Row>
-        <div className="d-flex justify-content-end mb-4">
-          <Button className="me-2" onClick={handlePrevPage}>
-            Prev
-          </Button>
-          <p className="me-2 pt-2 m-0">{page + 1}</p>
-          <Button onClick={handleNextPage}>Next</Button>
-        </div>
       </Container>
 
       <Modal show={showModal} onHide={handleCloseModal}>
