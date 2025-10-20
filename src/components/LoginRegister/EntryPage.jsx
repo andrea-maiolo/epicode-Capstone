@@ -3,6 +3,7 @@ import { Button, Col, Container, Image, Row } from "react-bootstrap";
 import logo from "../../assets/logo.png";
 import Login from "./Login";
 import Register from "./Register";
+import "./EntryPage.scss";
 
 const EntryPage = function ({ setUserRole }) {
   const [activeComponent, setActiveComponent] = useState(null);
@@ -24,10 +25,10 @@ const EntryPage = function ({ setUserRole }) {
                 simple, fast, and reliable service.
               </p>
               <div className="d-flex gap-3">
-                <Button className="btn btn-primary btn-lg px-4 rounded-pill shadow" onClick={() => setActiveComponent("login")}>
+                <Button className="btn btn-primary btn-lg px-4 shadow" onClick={() => setActiveComponent("login")}>
                   Login
                 </Button>
-                <Button className="btn btn-primary btn-lg px-4 rounded-pill" onClick={() => setActiveComponent("register")}>
+                <Button className="btn btn-primary btn-lg px-4 shadow" onClick={() => setActiveComponent("register")}>
                   Register
                 </Button>
               </div>
@@ -36,17 +37,23 @@ const EntryPage = function ({ setUserRole }) {
           {activeComponent === "login" && (
             <div>
               <Login setUserRole={setUserRole} />
-              <Button className="btn-primary mt-3" onClick={() => setActiveComponent("register")}>
-                Register
-              </Button>
+              <p className="m-0 position-relative top-50">
+                Don't have an account?{" "}
+                <span className="text-primary fw-semibold" onClick={() => setActiveComponent("register")}>
+                  Sign up
+                </span>
+              </p>
             </div>
           )}
           {activeComponent === "register" && (
             <div>
               <Register />
-              <Button className="btn-primary mt-3" onClick={() => setActiveComponent("login")}>
-                Login
-              </Button>
+              <p className="m-0 position-relative specificTop">
+                Already have an account?{" "}
+                <span className="text-primary fw-semibold" onClick={() => setActiveComponent("login")}>
+                  Sign in
+                </span>
+              </p>
             </div>
           )}
         </Col>

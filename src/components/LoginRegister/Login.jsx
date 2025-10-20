@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form, Button, Spinner, Alert, Container } from "react-bootstrap";
+import { Form, Button, Spinner, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const Login = function ({ setUserRole }) {
@@ -70,6 +70,10 @@ const Login = function ({ setUserRole }) {
     }
   };
 
+  const handleRefresh = function () {
+    window.location.reload();
+  };
+
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center">
@@ -82,44 +86,50 @@ const Login = function ({ setUserRole }) {
   if (error) {
     return (
       <div>
-        <Container fluid>
-          <Alert variant="danger" className="mt-4">
-            Error login, sorry try again. {error}
-          </Alert>
-        </Container>
+        <Alert variant="danger" className="mt-4">
+          Error login, sorry try again. {error}
+        </Alert>
+        <p>
+          Retry to{" "}
+          <span className="text-primary fw-semibold" onClick={() => handleRefresh()}>
+            login
+          </span>
+        </p>
       </div>
     );
   }
 
   return (
-    <Form className="w-50" onSubmit={handleSubmit}>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label className="">Email address</Form.Label>
-        <Form.Control
-          className="border-secondary"
-          type="email"
-          placeholder="example@gmail.com"
-          value={email}
-          onChange={(e) => handleEmailChange(e)}
-          onKeyDown={handleKeyDown}
-        />
-      </Form.Group>
+    <div>
+      <Form className="w-50" onSubmit={handleSubmit}>
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label className="">Email address</Form.Label>
+          <Form.Control
+            className="border-secondary"
+            type="email"
+            placeholder="example@gmail.com"
+            value={email}
+            onChange={(e) => handleEmailChange(e)}
+            onKeyDown={handleKeyDown}
+          />
+        </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control
-          className="border-secondary"
-          type="password"
-          placeholder="password"
-          value={password}
-          onChange={(e) => handlePasswordChange(e)}
-          onKeyDown={handleKeyDown}
-        />
-      </Form.Group>
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
-    </Form>
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            className="border-secondary"
+            type="password"
+            placeholder="password"
+            value={password}
+            onChange={(e) => handlePasswordChange(e)}
+            onKeyDown={handleKeyDown}
+          />
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
+      </Form>
+    </div>
   );
 };
 

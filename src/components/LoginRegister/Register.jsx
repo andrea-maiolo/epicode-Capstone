@@ -68,6 +68,10 @@ const Register = function () {
     setSurname(e.target.value);
   };
 
+  const handleRefresh = function () {
+    window.location.reload();
+  };
+
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center">
@@ -80,11 +84,15 @@ const Register = function () {
   if (error) {
     return (
       <div>
-        <Container fluid>
-          <Alert variant="danger" className="mt-4">
-            Error loading: {error}
-          </Alert>
-        </Container>
+        <Alert variant="danger" className="mt-4">
+          Error loading: {error}
+        </Alert>
+        <p>
+          Retry to{" "}
+          <span className="text-primary fw-semibold" onClick={() => handleRefresh()}>
+            register
+          </span>
+        </p>
       </div>
     );
   }
