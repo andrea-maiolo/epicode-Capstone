@@ -17,7 +17,11 @@ $font-family-body: "Viaoda Libre", serif;
 }
 
 body,
-p {
+p,
+label,
+button,
+input,
+span {
   font-family: $font-family-body;
 }
 
