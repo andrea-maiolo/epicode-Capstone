@@ -7,8 +7,7 @@ import MyFooter from "../Footer/MyFooter";
 const Rooms = function () {
   const [roomsFromDb, setRoomsFromDb] = useState([]);
   const [error, setError] = useState("");
-  const [adults, setAdults] = useState(1);
-  const [children, setChildren] = useState(0);
+  const [guests, setGuests] = useState(1);
   const [checkinDate, setCheckinDate] = useState("");
   const [checkoutDate, setCheckoutDate] = useState("");
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -51,20 +50,12 @@ const Rooms = function () {
     }
   };
 
-  const handleGuestsChange = (type, action) => {
-    if (type === "adults") {
-      setAdults((prev) => (action === "increment" ? prev + 1 : Math.max(0, prev - 1)));
-    } else {
-      setChildren((prev) => (action === "increment" ? prev + 1 : Math.max(0, prev - 1)));
-    }
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
     setShowErrorAlert(false);
 
-    if ((adults === 0 && children === 0) || !checkinDate || !checkoutDate || (checkinDate && checkoutDate && new Date(checkoutDate) <= new Date(checkinDate))) {
+    if (guests === 0 || !checkinDate || !checkoutDate || (checkinDate && checkoutDate && new Date(checkoutDate) <= new Date(checkinDate))) {
       setShowErrorAlert(true);
     }
 
@@ -85,7 +76,7 @@ const Rooms = function () {
   };
 
   const handleBookNow = (room) => {
-    if ((adults === 0 && children === 0) || !checkinDate || !checkoutDate || new Date(checkoutDate) <= new Date(checkinDate)) {
+    if (guests === 0 || !checkinDate || !checkoutDate || new Date(checkoutDate) <= new Date(checkinDate)) {
       window.alert("Please fill in all booking details (guests, check-in, and check-out dates) before booking.");
       setShowModal(false);
     } else {
@@ -205,7 +196,8 @@ const Rooms = function () {
         </Container>
       </section>
 
-      <Container className="rounded shadow bg-secondary mb-3">
+      {/* <Container className="rounded shadow bg-secondary mb-3"> */}
+      <Container fluid className="bg-secondary mb-3 shadow-md">
         <Form onSubmit={handleSubmit}>
           {showErrorAlert && (
             <Alert variant="danger" onClose={() => setShowErrorAlert(false)} dismissible>
@@ -213,42 +205,30 @@ const Rooms = function () {
             </Alert>
           )}
           <Row className="g-3">
-            <Col md={6}>
+            <Col md={4}>
               <Form.Group>
                 <Form.Label>Guests</Form.Label>
-                <div className="d-flex flex-column flex-sm-row justify-content-between">
-                  <div className="d-flex align-items-center mb-2 mb-sm-0">
-                    <span className="me-2">Adults:</span>
-                    <Button variant="outline-primary" onClick={() => handleGuestsChange("adults", "decrement")} className="rounded-circle">
-                      -
-                    </Button>
-                    <span className="mx-2">{adults}</span>
-                    <Button variant="outline-primary" onClick={() => handleGuestsChange("adults", "increment")} className="rounded-circle">
-                      +
-                    </Button>
-                  </div>
-                  <div className="d-flex align-items-center">
-                    <span className="me-2">Children:</span>
-                    <Button variant="outline-primary" onClick={() => handleGuestsChange("children", "decrement")} className="rounded-circle">
-                      -
-                    </Button>
-                    <span className="mx-2">{children}</span>
-                    <Button variant="outline-primary" onClick={() => handleGuestsChange("children", "increment")} className="rounded-circle">
-                      +
-                    </Button>
-                  </div>
+                <div className="d-flex justify-content-evenly align-items-center">
+                  <span className="me-2">Count:</span>
+                  <Button variant="outline-primary" onClick={() => setGuests((prev) => (prev != 0 ? prev - 1 : prev))} className="rounded-circle">
+                    -
+                  </Button>
+                  <span className="mx-2">{guests}</span>
+                  <Button variant="outline-primary" onClick={() => setGuests((prev) => (prev != 10 ? prev + 1 : prev))} className="rounded-circle">
+                    +
+                  </Button>
                 </div>
               </Form.Group>
             </Col>
 
-            <Col md={3}>
+            <Col md={4}>
               <Form.Group>
                 <Form.Label>Check-in Date</Form.Label>
                 <Form.Control type="date" value={checkinDate} onChange={(e) => setCheckinDate(e.target.value)} required />
               </Form.Group>
             </Col>
 
-            <Col md={3}>
+            <Col md={4}>
               <Form.Group>
                 <Form.Label>Check-out Date</Form.Label>
                 <Form.Control type="date" value={checkoutDate} onChange={(e) => setCheckoutDate(e.target.value)} required />
@@ -279,16 +259,16 @@ const Rooms = function () {
             let isColored = (row + col) % 2 === 0;
 
             return (
-              <Col md={6} key={room.id} className={`rounded ${isColored ? "bg-primary-subtle" : ""}`}>
+              <Col md={4} key={room.id} className={`rounded ${isColored ? "bg-primary-subtle" : ""}`}>
                 <div className="d-flex flex-column h-100 mt-2">
                   <div className="rounded-4 overflow-hidden image-container">
                     <Image src={room.picture} alt={room.description} fluid className="room-image" loading="lazy" />
                   </div>
                   <div className="mt-3 p-2">
                     <h5>{room.description}</h5>
-                    <p>Price: {room.price}&euro; per night</p>
-                    <p>Capacity: {room.capacity}</p>
-                    <Button variant="primary" onClick={() => handleBookNow(room)}>
+                    <p className="m-0">Price: {room.price}&euro; per night</p>
+                    <p className="m-0">Capacity: {room.capacity}</p>
+                    <Button className="mt-3" variant="primary" onClick={() => handleBookNow(room)}>
                       Book Now
                     </Button>
                   </div>
@@ -300,7 +280,7 @@ const Rooms = function () {
       </Container>
 
       <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
+        <Modal.Header className="bg-secondary" closeButton>
           <Modal.Title>Booking Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -314,7 +294,7 @@ const Rooms = function () {
                 <strong>Check-out:</strong> {checkoutDate}
               </p>
               <p>
-                <strong>Guests:</strong> {adults} Adults, {children} Children
+                <strong>Guests:</strong> {guests}
               </p>
               <hr />
               <p>
