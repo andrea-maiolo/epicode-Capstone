@@ -100,36 +100,34 @@ const Login = function ({ setUserRole }) {
   }
 
   return (
-    <div>
-      <Form className="w-50" onSubmit={handleSubmit}>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label className="">Email address</Form.Label>
-          <Form.Control
-            className="border-secondary"
-            type="email"
-            placeholder="example@gmail.com"
-            value={email}
-            onChange={(e) => handleEmailChange(e)}
-            onKeyDown={handleKeyDown}
-          />
-        </Form.Group>
+    <Form className="w-50" onSubmit={handleSubmit}>
+      <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form.Label className="">Email address</Form.Label>
+        <Form.Control
+          className="border-secondary"
+          type="email"
+          placeholder="example@gmail.com"
+          value={email}
+          onChange={(e) => handleEmailChange(e)}
+          onKeyDown={handleKeyDown}
+        />
+      </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            className="border-secondary"
-            type="password"
-            placeholder="password"
-            value={password}
-            onChange={(e) => handlePasswordChange(e)}
-            onKeyDown={handleKeyDown}
-          />
-        </Form.Group>
-        <Button variant="primary" type="submit">
-          Submit
-        </Button>
-      </Form>
-    </div>
+      <Form.Group className="mb-3" controlId="formBasicPassword">
+        <Form.Label>Password</Form.Label>
+        <Form.Control
+          className="border-secondary"
+          type="password"
+          placeholder="password"
+          value={password}
+          onChange={(e) => handlePasswordChange(e)}
+          onKeyDown={handleKeyDown}
+        />
+      </Form.Group>
+      <Button variant="primary" type="submit">
+        Submit
+      </Button>
+    </Form>
   );
 };
 

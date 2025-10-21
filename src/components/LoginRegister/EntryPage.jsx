@@ -39,7 +39,7 @@ const EntryPage = function ({ setUserRole }) {
               <Login setUserRole={setUserRole} />
               <p className="m-0 position-relative top-50">
                 Don't have an account?{" "}
-                <span className="text-primary fw-semibold" onClick={() => setActiveComponent("register")}>
+                <span className="text-primary fw-semibold swithText" onClick={() => setActiveComponent("register")}>
                   Sign up
                 </span>
               </p>
@@ -50,7 +50,7 @@ const EntryPage = function ({ setUserRole }) {
               <Register />
               <p className="m-0 position-relative specificTop">
                 Already have an account?{" "}
-                <span className="text-primary fw-semibold" onClick={() => setActiveComponent("login")}>
+                <span className="text-primary fw-semibold swithText" onClick={() => setActiveComponent("login")}>
                   Sign in
                 </span>
               </p>
