@@ -9,12 +9,12 @@ const RoomManagment = function () {
   const [createRoom, setCreateRoom] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [updateModal, setUpdateModal] = useState(false);
+  const [modalPicture, setModalPicture] = useState(false);
   const [roomNumber, setRoomNumber] = useState("");
   const [roomCapacity, setRoomCapacity] = useState("");
   const [roomPrice, setRoomPrice] = useState("");
   const [roomDescription, setRoomDescription] = useState("");
   const [roomSelected, setRoomSelected] = useState(null);
-  const [modalPicture, setModalPicture] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(0);
@@ -107,7 +107,7 @@ const RoomManagment = function () {
         throw new Error("Network response was not ok");
       }
 
-      const datasave = await responseSave.json();
+      // const datasave = await responseSave.json();
       fetchAllRooms(token);
       // return datasave;
     } catch (err) {
@@ -138,8 +138,6 @@ const RoomManagment = function () {
       if (!response.ok) {
         throw new Error("File upload failed");
       }
-
-      handlePictureClose();
       fetchAllRooms(token);
     } catch (err) {
       setError(err.message);
@@ -184,21 +182,59 @@ const RoomManagment = function () {
 
     fetchSave(token, roomData);
 
-    handleClose();
+    handleClose("create");
   };
 
-  const handleClose = () => setCreateRoom(false);
+  const handleClose = function (modalName) {
+    switch (modalName) {
+      case "create":
+        setCreateRoom(false);
+        break;
 
-  const handleShow = () => setCreateRoom(true);
+      case "delete":
+        setDeleteModal(false);
+        setRoomSelected(null);
+        break;
 
-  const handleDeleteClose = () => {
-    setDeleteModal(false);
-    setRoomSelected(null);
+      case "update":
+        setUpdateModal(false);
+        setRoomSelected(null);
+        break;
+
+      case "picture":
+        setModalPicture(false);
+        setRoomSelected(null);
+        setSelectedFile(null);
+        break;
+
+      default:
+        break;
+    }
   };
 
-  const handleDeleteShow = (roomId) => {
-    setDeleteModal(true);
-    setRoomSelected(roomId);
+  const handleShow = function (modalName, otherInfo) {
+    switch (modalName) {
+      case "create":
+        setCreateRoom(true);
+        break;
+      case "delete":
+        setDeleteModal(true);
+        setRoomSelected(otherInfo);
+        break;
+
+      case "update":
+        setUpdateModal(true);
+        setRoomSelected(otherInfo);
+        break;
+
+      case "picture":
+        setModalPicture(true);
+        setRoomSelected(otherInfo);
+        setSelectedFile(null);
+        break;
+      default:
+        break;
+    }
   };
 
   const handleDeleteRoom = function () {
@@ -206,16 +242,6 @@ const RoomManagment = function () {
     fetchDelete(token);
     setRoomSelected(null);
     setDeleteModal(false);
-  };
-
-  const handleUpdateClose = () => {
-    setUpdateModal(false);
-    setRoomSelected(null);
-  };
-
-  const handleUpdateShow = (roomId) => {
-    setUpdateModal(true);
-    setRoomSelected(roomId);
   };
 
   const handleUpdateRoom = function () {
@@ -229,18 +255,6 @@ const RoomManagment = function () {
     fetchUpdate(token, roomDataUpdate);
     setRoomSelected(null);
     setUpdateModal(false);
-  };
-
-  const openUpdateModalPicure = (room) => {
-    setRoomSelected(room);
-    setModalPicture(true);
-    setSelectedFile(null);
-  };
-
-  const handlePictureClose = () => {
-    setModalPicture(false);
-    setRoomSelected(null);
-    setSelectedFile(null);
   };
 
   const handleFileChange = (e) => {
@@ -308,10 +322,10 @@ const RoomManagment = function () {
       <Container fluid className="manager-main">
         <Row className="mb-3">
           <Col sm={12}>
-            <Button onClick={handleShow}>Create new room</Button>
+            <Button onClick={() => handleShow("create")}>Create new room</Button>
             {/* modal for save */}
             <Modal show={createRoom} onHide={handleClose}>
-              <Modal.Header className="bg-secondary" closeButton>
+              <Modal.Header className="bg-secondary">
                 <Modal.Title>Create new Room</Modal.Title>
               </Modal.Header>
               <Modal.Body>
@@ -328,7 +342,7 @@ const RoomManagment = function () {
               </Modal.Body>
               <Modal.Footer>
                 <p>note that all rooms are created with a placeholder image, remember to update the picture later</p>
-                <Button variant="danger" onClick={handleClose}>
+                <Button variant="danger" onClick={() => handleClose("create")}>
                   Cancell
                 </Button>
                 <Button variant="primary" onClick={handleSubmit}>
@@ -367,13 +381,13 @@ const RoomManagment = function () {
                   <p>Price: {room.price}&euro; per night</p>
                   <p>Capacity: {room.capacity}</p>
                   <p>Availability: {room.available ? "Available" : "Not available"}</p>
-                  <Button className="me-1" variant="primary" onClick={() => handleUpdateShow(room)}>
+                  <Button className="me-1" variant="primary" onClick={() => handleShow("update", room)}>
                     Update
                   </Button>
-                  <Button className="me-1" variant="primary" onClick={() => handleDeleteShow(room.id)}>
+                  <Button className="me-1" variant="primary" onClick={() => handleShow("delete", room.id)}>
                     Delete
                   </Button>
-                  <Button variant="secondary" className="me-1" onClick={() => openUpdateModalPicure(room)}>
+                  <Button variant="secondary" className="me-1" onClick={() => handleShow("picture", room)}>
                     Edit picture
                   </Button>
                   <Button className="mt-1" onClick={() => handleStatusChange(room)}>
@@ -386,12 +400,12 @@ const RoomManagment = function () {
         </Row>
       </Container>
       {/* modal for delete */}
-      <Modal show={deleteModal} onHide={handleDeleteClose}>
-        <Modal.Header className="bg-secondary" closeButton>
+      <Modal show={deleteModal} onHide={handleClose}>
+        <Modal.Header className="bg-secondary">
           <Modal.Title>Deleting room {roomSelected} , THIS ACTION IS NOT REVERSABLE ARE YOU SURE TO CONTINUE?</Modal.Title>
         </Modal.Header>
         <Modal.Footer>
-          <Button variant="danger" onClick={handleDeleteClose}>
+          <Button variant="danger" onClick={() => handleClose("delete")}>
             Cancell
           </Button>
           <Button variant="primary" onClick={handleDeleteRoom}>
@@ -400,8 +414,8 @@ const RoomManagment = function () {
         </Modal.Footer>
       </Modal>
       {/* modal update */}
-      <Modal show={updateModal} onHide={handleUpdateClose}>
-        <Modal.Header className="bg-secondary" closeButton>
+      <Modal show={updateModal} onHide={handleClose}>
+        <Modal.Header className="bg-secondary">
           <Modal.Title>Update room</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -431,7 +445,7 @@ const RoomManagment = function () {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="danger" onClick={handleUpdateClose}>
+          <Button variant="danger" onClick={() => handleClose("update")}>
             Cancell
           </Button>
           <Button variant="primary" onClick={handleUpdateRoom}>
@@ -440,8 +454,8 @@ const RoomManagment = function () {
         </Modal.Footer>
       </Modal>
       {/* modal for picture */}
-      <Modal show={modalPicture} onHide={handlePictureClose}>
-        <Modal.Header className="bg-secondary" closeButton>
+      <Modal show={modalPicture} onHide={handleClose}>
+        <Modal.Header className="bg-secondary">
           <Modal.Title>Upload Picture for Room {roomSelected ? roomSelected.number : ""}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -454,7 +468,7 @@ const RoomManagment = function () {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="danger" onClick={handlePictureClose}>
+          <Button variant="danger" onClick={() => handleClose("picture")}>
             Cancel
           </Button>
           <Button variant="success" onClick={fetchUploadPicture} disabled={!selectedFile}>
