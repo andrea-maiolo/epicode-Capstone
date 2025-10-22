@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Col, Container, ListGroup, Row, Spinner } from "react-bootstrap";
+import { Button, Card, Col, Container, ListGroup, Pagination, Row, Spinner } from "react-bootstrap";
 import AdminNav from "./AdmnNav/AdminNav";
 import "./Admin.scss";
 import { FaEnvelope } from "react-icons/fa";
@@ -49,6 +49,14 @@ const UserManagment = function () {
     setTotalPagesArray(tempArray);
   };
 
+  // const createTotalPagesArray = function (total) {
+  //   let tempArray = [];
+  //   for (let i = 0; i < total; i++) {
+  //     tempArray.push(<Pagination.Item key={i}>{i}</Pagination.Item>);
+  //   }
+  //   setTotalPagesArray(tempArray);
+  // };
+
   const handlePrevPage = () => {
     if (page == 0) {
       return;
@@ -68,6 +76,7 @@ const UserManagment = function () {
   };
 
   const handlePageChange = function (e) {
+    console.log(e.target.innerHTML);
     const pageToNavigate = e.target.innerHTML;
     setPage(pageToNavigate - 1);
   };
@@ -99,7 +108,7 @@ const UserManagment = function () {
       <AdminNav />
       <Container fluid className="manager-main py-5 px-md-5">
         <h2 className="display-4 mb-4 user-managment-heading">User Directory</h2>
-        <nav aria-label="Page navigation example">
+        {/* <nav aria-label="Page navigation example">
           <ul className="pagination">
             <li className="page-item page-link" onClick={handlePrevPage}>
               <span aria-label="Previus">&laquo;</span>
@@ -115,7 +124,19 @@ const UserManagment = function () {
               <span aria-label="Next">&raquo;</span>
             </li>
           </ul>
-        </nav>
+        </nav> */}
+
+        <div>
+          <Pagination>
+            <Pagination.Prev onClick={handlePrevPage} />
+            {totalPagesArray.map((page) => {
+              return <Pagination.Item onClick={handlePageChange}>{page + 1}</Pagination.Item>;
+            })}
+            {/* <Pagination.Item>{totalPagesArray}</Pagination.Item> */}
+            <Pagination.Next onClick={handleNextPage} />
+          </Pagination>
+          <br />
+        </div>
 
         {users.length > 0 ? (
           <Row className="g-4">
