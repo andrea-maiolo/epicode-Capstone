@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, Button, Col, Container, Form, Image, Modal, Nav, Navbar, Pagination, Row, Spinner } from "react-bootstrap";
+import { Alert, Button, Col, Container, Form, Image, Modal, Pagination, Row, Spinner } from "react-bootstrap";
 import AdminNav from "./AdmnNav/AdminNav";
 import "./Admin.scss";
 
@@ -21,11 +21,6 @@ const RoomManagment = function () {
   const [totalP, setTotalP] = useState(null);
   const [totalPagesArray, setTotalPagesArray] = useState(null);
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("authToken");
-  //   fetchAllRooms(token);
-  // }, []);
-
   useEffect(() => {
     fetchAllRooms();
   }, [page]);
@@ -33,7 +28,7 @@ const RoomManagment = function () {
   const fetchAllRooms = async function () {
     const token = localStorage.getItem("authToken");
     try {
-      const response = await fetch("http://localhost:3001/rooms", {
+      const response = await fetch(`http://localhost:3001/rooms?pageNumber=${page}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -46,6 +41,7 @@ const RoomManagment = function () {
 
       const data = await response.json();
       setRoomsFromDb(data.content);
+      setTotalP(data.totalPages);
       createTotalPagesArray(data.totalPages);
     } catch (err) {
       setError(err.message);
@@ -315,7 +311,7 @@ const RoomManagment = function () {
             <Button onClick={handleShow}>Create new room</Button>
             {/* modal for save */}
             <Modal show={createRoom} onHide={handleClose}>
-              <Modal.Header closeButton>
+              <Modal.Header className="bg-secondary" closeButton>
                 <Modal.Title>Create new Room</Modal.Title>
               </Modal.Header>
               <Modal.Body>
@@ -348,7 +344,11 @@ const RoomManagment = function () {
             <Pagination>
               <Pagination.Prev onClick={handlePrevPage} />
               {totalPagesArray.map((page) => {
-                return <Pagination.Item onClick={handlePageChange}>{page + 1}</Pagination.Item>;
+                return (
+                  <Pagination.Item key={page} onClick={handlePageChange}>
+                    {page + 1}
+                  </Pagination.Item>
+                );
               })}
               <Pagination.Next onClick={handleNextPage} />
             </Pagination>
@@ -387,7 +387,7 @@ const RoomManagment = function () {
       </Container>
       {/* modal for delete */}
       <Modal show={deleteModal} onHide={handleDeleteClose}>
-        <Modal.Header closeButton>
+        <Modal.Header className="bg-secondary" closeButton>
           <Modal.Title>Deleting room {roomSelected} , THIS ACTION IS NOT REVERSABLE ARE YOU SURE TO CONTINUE?</Modal.Title>
         </Modal.Header>
         <Modal.Footer>
@@ -401,7 +401,7 @@ const RoomManagment = function () {
       </Modal>
       {/* modal update */}
       <Modal show={updateModal} onHide={handleUpdateClose}>
-        <Modal.Header closeButton>
+        <Modal.Header className="bg-secondary" closeButton>
           <Modal.Title>Update room</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -441,7 +441,7 @@ const RoomManagment = function () {
       </Modal>
       {/* modal for picture */}
       <Modal show={modalPicture} onHide={handlePictureClose}>
-        <Modal.Header closeButton>
+        <Modal.Header className="bg-secondary" closeButton>
           <Modal.Title>Upload Picture for Room {roomSelected ? roomSelected.number : ""}</Modal.Title>
         </Modal.Header>
         <Modal.Body>

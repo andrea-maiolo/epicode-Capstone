@@ -54,7 +54,6 @@ const AdminBookingCalendar = function () {
 
         setRooms(roomsData.content);
         setBookings(bookingsData.content);
-        console.log(bookingsData.content);
       } catch (err) {
         setError(err);
       } finally {

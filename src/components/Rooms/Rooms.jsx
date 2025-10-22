@@ -258,14 +258,6 @@ const Rooms = function () {
       </Container>
 
       <Container fluid className="mb-2">
-        {/* <div className="d-flex justify-content-end mb-4">
-          <Button className="me-2" onClick={handlePrevPage}>
-            Prev
-          </Button>
-          <p className="me-2 pt-2 m-0">{page + 1}</p>
-          <Button onClick={handleNextPage}>Next</Button>
-        </div> */}
-
         <div>
           <Pagination>
             <Pagination.Prev onClick={handlePrevPage} />
