@@ -21,7 +21,15 @@ p,
 label,
 button,
 input,
-span {
+span,
+th,
+td {
+  font-family: $font-family-body;
+}
+
+$btn-font-family: $font-family-body;
+
+.nav-link {
   font-family: $font-family-body;
 }
 

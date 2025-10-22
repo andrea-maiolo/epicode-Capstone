@@ -10,6 +10,7 @@ const UserManagment = function () {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(0);
   const [totalP, setTotalP] = useState(null);
+  const [totalPagesArray, setTotalPagesArray] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -32,11 +33,20 @@ const UserManagment = function () {
       const data = await response.json();
       setUsers(data.content);
       setTotalP(data.totalPages);
+      createTotalPagesArray(data.totalPages);
     } catch (err) {
       setError(err.message);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const createTotalPagesArray = function (total) {
+    let tempArray = [];
+    for (let i = 0; i < total; i++) {
+      tempArray.push(i);
+    }
+    setTotalPagesArray(tempArray);
   };
 
   const handlePrevPage = () => {
@@ -55,6 +65,11 @@ const UserManagment = function () {
       setPage(page + 1);
       fetchUsers();
     }
+  };
+
+  const handlePageChange = function (e) {
+    const pageToNavigate = e.target.innerHTML;
+    setPage(pageToNavigate - 1);
   };
 
   if (isLoading) {
@@ -84,13 +99,24 @@ const UserManagment = function () {
       <AdminNav />
       <Container fluid className="manager-main py-5 px-md-5">
         <h2 className="display-4 mb-4 user-managment-heading">User Directory</h2>
-        <div className="d-flex justify-content-end mb-4">
-          <Button className="me-2" onClick={handlePrevPage}>
-            Prev
-          </Button>
-          <p className="me-2 pt-2 m-0">{page + 1}</p>
-          <Button onClick={handleNextPage}>Next</Button>
-        </div>
+        <nav aria-label="Page navigation example">
+          <ul className="pagination">
+            <li className="page-item page-link" onClick={handlePrevPage}>
+              <span aria-label="Previus">&laquo;</span>
+            </li>
+            {totalPagesArray.map((page) => {
+              return (
+                <li className="page-link page-item" onClick={handlePageChange}>
+                  {page + 1}
+                </li>
+              );
+            })}
+            <li className="page-item page-link" onClick={handleNextPage}>
+              <span aria-label="Next">&raquo;</span>
+            </li>
+          </ul>
+        </nav>
+
         {users.length > 0 ? (
           <Row className="g-4">
             {users.map((user) => (

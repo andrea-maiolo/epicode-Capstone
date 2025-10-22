@@ -308,7 +308,7 @@ const RoomManagment = function () {
 
         <Row className="g-4">
           {roomsFromDb.map((room) => (
-            <Col md={6} key={room.id}>
+            <Col md={4} key={room.id}>
               <div className="d-flex flex-column h-100">
                 <div className="rounded-4 overflow-hidden image-container">
                   <Image src={room.picture} alt={room.description} fluid className="room-image" />
@@ -317,7 +317,7 @@ const RoomManagment = function () {
                   <p>{room.description}</p>
                   <p>Price: {room.price}&euro; per night</p>
                   <p>Capacity: {room.capacity}</p>
-                  <p>Status: {room.available.toString()}</p>
+                  <p>Availability: {room.available ? "Available" : "Not available"}</p>
                   <Button className="me-1" variant="primary" onClick={() => handleUpdateShow(room)}>
                     Update
                   </Button>

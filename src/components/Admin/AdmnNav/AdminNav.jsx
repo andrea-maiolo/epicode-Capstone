@@ -14,7 +14,7 @@ const AdminNav = function () {
           <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
             <Nav>
               <Nav.Link href="/adminHome" className="text-white text-decoration-none opacity-75">
-                Admin home
+                Admin Home
               </Nav.Link>
               <Nav.Link href="/roomManager" className="text-white text-decoration-none opacity-75">
                 Rooms Managment
