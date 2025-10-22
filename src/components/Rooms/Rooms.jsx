@@ -1,4 +1,4 @@
-import { Button, Col, Container, Form, Image, Row, Alert, Modal, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Form, Image, Row, Alert, Modal, Spinner, Pagination } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import "./Rooms.scss";
 import MyNav from "../Navbar/MyNav";
@@ -16,6 +16,7 @@ const Rooms = function () {
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [totalP, setTotalP] = useState(null);
+  const [totalPagesArray, setTotalPagesArray] = useState(null);
 
   const API_URl = "http://localhost:3001";
 
@@ -41,8 +42,8 @@ const Rooms = function () {
 
       const data = await response.json();
       setRoomsFromDb(data.content);
-      console.log(data);
       setTotalP(data.totalPages);
+      createTotalPagesArray(data.totalPages);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -121,6 +122,14 @@ const Rooms = function () {
 
   const handleCloseModal = () => setShowModal(false);
 
+  const createTotalPagesArray = function (total) {
+    let tempArray = [];
+    for (let i = 0; i < total; i++) {
+      tempArray.push(i);
+    }
+    setTotalPagesArray(tempArray);
+  };
+
   const handlePrevPage = () => {
     if (page == 0) {
       return;
@@ -135,6 +144,11 @@ const Rooms = function () {
     } else {
       setPage(page + 1);
     }
+  };
+
+  const handlePageChange = function (e) {
+    const pageToNavigate = e.target.innerHTML;
+    setPage(pageToNavigate - 1);
   };
 
   if (isLoading) {
@@ -196,7 +210,6 @@ const Rooms = function () {
         </Container>
       </section>
 
-      {/* <Container className="rounded shadow bg-secondary mb-3"> */}
       <Container fluid className="bg-secondary mb-3 shadow-md">
         <Form onSubmit={handleSubmit}>
           {showErrorAlert && (
@@ -245,13 +258,24 @@ const Rooms = function () {
       </Container>
 
       <Container fluid className="mb-2">
-        <div className="d-flex justify-content-end mb-4">
+        {/* <div className="d-flex justify-content-end mb-4">
           <Button className="me-2" onClick={handlePrevPage}>
             Prev
           </Button>
           <p className="me-2 pt-2 m-0">{page + 1}</p>
           <Button onClick={handleNextPage}>Next</Button>
+        </div> */}
+
+        <div>
+          <Pagination>
+            <Pagination.Prev onClick={handlePrevPage} />
+            {totalPagesArray.map((page) => {
+              return <Pagination.Item onClick={handlePageChange}>{page + 1}</Pagination.Item>;
+            })}
+            <Pagination.Next onClick={handleNextPage} />
+          </Pagination>
         </div>
+
         <Row className="g-4">
           {roomsFromDb.map((room, index) => {
             let row = Math.floor(index / 2);

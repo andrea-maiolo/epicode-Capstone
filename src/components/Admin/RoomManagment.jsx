@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, Button, Col, Container, Form, Image, Modal, Nav, Navbar, Row, Spinner } from "react-bootstrap";
+import { Alert, Button, Col, Container, Form, Image, Modal, Nav, Navbar, Pagination, Row, Spinner } from "react-bootstrap";
 import AdminNav from "./AdmnNav/AdminNav";
 import "./Admin.scss";
 
@@ -17,13 +17,21 @@ const RoomManagment = function () {
   const [modalPicture, setModalPicture] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [totalP, setTotalP] = useState(null);
+  const [totalPagesArray, setTotalPagesArray] = useState(null);
+
+  // useEffect(() => {
+  //   const token = localStorage.getItem("authToken");
+  //   fetchAllRooms(token);
+  // }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    fetchAllRooms(token);
-  }, []);
+    fetchAllRooms();
+  }, [page]);
 
-  const fetchAllRooms = async function (token) {
+  const fetchAllRooms = async function () {
+    const token = localStorage.getItem("authToken");
     try {
       const response = await fetch("http://localhost:3001/rooms", {
         method: "GET",
@@ -38,7 +46,7 @@ const RoomManagment = function () {
 
       const data = await response.json();
       setRoomsFromDb(data.content);
-      console.log(data.content);
+      createTotalPagesArray(data.totalPages);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -142,6 +150,26 @@ const RoomManagment = function () {
     }
   };
 
+  const fetchStatusChange = async (room) => {
+    const token = localStorage.getItem("authToken");
+    try {
+      const res = await fetch(`http://localhost:3001/rooms/${room.id}/status`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Status change failed");
+      }
+
+      fetchAllRooms(token);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   const handleSubmit = function (e) {
     e.preventDefault();
 
@@ -223,28 +251,37 @@ const RoomManagment = function () {
     setSelectedFile(e.target.files[0]);
   };
 
-  const fetchStatusChange = async (room) => {
-    const token = localStorage.getItem("authToken");
-    try {
-      const res = await fetch(`http://localhost:3001/rooms/${room.id}/status`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  const handleStatusChange = (room) => {
+    fetchStatusChange(room);
+  };
 
-      if (!res.ok) {
-        throw new Error("Status change failed");
-      }
+  const createTotalPagesArray = function (total) {
+    let tempArray = [];
+    for (let i = 0; i < total; i++) {
+      tempArray.push(i);
+    }
+    setTotalPagesArray(tempArray);
+  };
 
-      fetchAllRooms(token);
-    } catch (err) {
-      setError(err.message);
+  const handlePrevPage = () => {
+    if (page == 0) {
+      return;
+    } else {
+      setPage(page - 1);
     }
   };
 
-  const handleStatusChange = (room) => {
-    fetchStatusChange(room);
+  const handleNextPage = () => {
+    if (page == totalP - 1) {
+      return;
+    } else {
+      setPage(page + 1);
+    }
+  };
+
+  const handlePageChange = function (e) {
+    const pageToNavigate = e.target.innerHTML;
+    setPage(pageToNavigate - 1);
   };
 
   if (isLoading) {
@@ -304,6 +341,18 @@ const RoomManagment = function () {
               </Modal.Footer>
             </Modal>
           </Col>
+        </Row>
+
+        <Row>
+          <div>
+            <Pagination>
+              <Pagination.Prev onClick={handlePrevPage} />
+              {totalPagesArray.map((page) => {
+                return <Pagination.Item onClick={handlePageChange}>{page + 1}</Pagination.Item>;
+              })}
+              <Pagination.Next onClick={handleNextPage} />
+            </Pagination>
+          </div>
         </Row>
 
         <Row className="g-4">
