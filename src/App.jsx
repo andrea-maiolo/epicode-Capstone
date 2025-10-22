@@ -11,7 +11,6 @@ import RoomManagment from "./components/Admin/RoomManagment";
 import NotFoundPage from "./components/NotFoundPage/NotFoundPage";
 import { useState } from "react";
 import UnauthPage from "./components/UnauthPage/UnauthPage";
-import RemoveMe from "./RemoveMe";
 
 function App() {
   const ProtectedRoute = ({ children, requiredRole, userRole }) => {
