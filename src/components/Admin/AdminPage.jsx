@@ -38,7 +38,7 @@ const AdminBookingCalendar = function () {
     const token = localStorage.getItem("authToken");
     const fetchAdminData = async () => {
       try {
-        const roomsResponse = await fetch(`${API_URL}/rooms`, {
+        const roomsResponse = await fetch(`${API_URL}/rooms/forAdmin`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const bookingsResponse = await fetch(`${API_URL}/booking`, {
@@ -52,8 +52,8 @@ const AdminBookingCalendar = function () {
         const roomsData = await roomsResponse.json();
         const bookingsData = await bookingsResponse.json();
 
-        setRooms(roomsData.content);
-        setBookings(bookingsData.content);
+        setRooms(roomsData);
+        setBookings(bookingsData);
       } catch (err) {
         setError(err);
       } finally {
