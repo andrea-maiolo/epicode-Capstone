@@ -370,33 +370,37 @@ const RoomManagment = function () {
         </Row>
 
         <Row className="g-4">
-          {roomsFromDb.map((room) => (
-            <Col md={4} key={room.id}>
-              <div className="d-flex flex-column h-100">
-                <div className="rounded-4 overflow-hidden image-container">
-                  <Image src={room.picture} alt={room.description} fluid className="room-image" />
+          {roomsFromDb.map((room, index) => {
+            let isColored = index % 2 === 0;
+
+            return (
+              <Col md={4} key={room.id} className={`rounded ${isColored ? "bg-primary-subtle" : ""}`}>
+                <div className="d-flex flex-column h-100">
+                  <div className="rounded-4 overflow-hidden image-container">
+                    <Image src={room.picture} alt={room.description} fluid className="room-image" />
+                  </div>
+                  <div className="mt-3 p-2">
+                    <p className="m-0">{room.description}</p>
+                    <p className="m-0">Price: {room.price}&euro; per night</p>
+                    <p className="m-0">Capacity: {room.capacity}</p>
+                    <p className="m-0 mb-2">Availability: {room.available ? "Available" : "Not available"}</p>
+                    <Button className="me-1" variant="primary" onClick={() => handleShow("update", room)}>
+                      Update
+                    </Button>
+                    <Button className="me-1" variant="primary" onClick={() => handleShow("delete", room.id)}>
+                      Delete
+                    </Button>
+                    <Button variant="secondary" className="me-1" onClick={() => handleShow("picture", room)}>
+                      Edit picture
+                    </Button>
+                    <Button className="mt-1" onClick={() => handleStatusChange(room)}>
+                      Change availability
+                    </Button>
+                  </div>
                 </div>
-                <div className="mt-3 p-2">
-                  <p>{room.description}</p>
-                  <p>Price: {room.price}&euro; per night</p>
-                  <p>Capacity: {room.capacity}</p>
-                  <p>Availability: {room.available ? "Available" : "Not available"}</p>
-                  <Button className="me-1" variant="primary" onClick={() => handleShow("update", room)}>
-                    Update
-                  </Button>
-                  <Button className="me-1" variant="primary" onClick={() => handleShow("delete", room.id)}>
-                    Delete
-                  </Button>
-                  <Button variant="secondary" className="me-1" onClick={() => handleShow("picture", room)}>
-                    Edit picture
-                  </Button>
-                  <Button className="mt-1" onClick={() => handleStatusChange(room)}>
-                    Change availability
-                  </Button>
-                </div>
-              </div>
-            </Col>
-          ))}
+              </Col>
+            );
+          })}
         </Row>
       </Container>
       {/* modal for delete */}

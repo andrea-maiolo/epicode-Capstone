@@ -270,9 +270,10 @@ const Rooms = function () {
 
         <Row className="g-4">
           {roomsFromDb.map((room, index) => {
-            let row = Math.floor(index / 2);
-            let col = index % 2;
-            let isColored = (row + col) % 2 === 0;
+            // let row = Math.floor(index / 2);
+            // let col = index % 2;
+            // let isColored = (row + col) % 2 === 0;
+            let isColored = index % 2 === 0;
 
             return (
               <Col md={4} key={room.id} className={`rounded ${isColored ? "bg-primary-subtle" : ""}`}>
