@@ -28,7 +28,7 @@ const Rooms = function () {
     const token = localStorage.getItem("authToken");
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URl}/rooms?pageNumber=${page}&checkin=${checkinDate}&checkout=${checkoutDate}`, {
+      const response = await fetch(`${API_URl}/rooms?pageNumber=${page}&checkin=${checkinDate}&checkout=${checkoutDate}&guests=${guests}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -41,6 +41,7 @@ const Rooms = function () {
       }
 
       const data = await response.json();
+      console.log(data);
       setRoomsFromDb(data.content);
       setTotalP(data.totalPages);
       createTotalPagesArray(data.totalPages);
@@ -53,7 +54,7 @@ const Rooms = function () {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setPage(0);
     setShowErrorAlert(false);
 
     if (guests === 0 || !checkinDate || !checkoutDate || (checkinDate && checkoutDate && new Date(checkoutDate) <= new Date(checkinDate))) {
@@ -96,6 +97,7 @@ const Rooms = function () {
         checkout: checkoutDate,
         userId: userId,
         roomId: selectedRoom.id,
+        guests: guests,
       };
 
       const response = await fetch("http://localhost:3001/booking", {
@@ -223,11 +225,11 @@ const Rooms = function () {
                 <Form.Label>Guests</Form.Label>
                 <div className="d-flex justify-content-evenly align-items-center">
                   <span className="me-2">Count:</span>
-                  <Button variant="outline-primary" onClick={() => setGuests((prev) => (prev != 0 ? prev - 1 : prev))} className="rounded-circle">
+                  <Button variant="outline-primary" onClick={() => setGuests((prev) => (prev != 1 ? prev - 1 : prev))} className="rounded-circle">
                     -
                   </Button>
                   <span className="mx-2">{guests}</span>
-                  <Button variant="outline-primary" onClick={() => setGuests((prev) => (prev != 10 ? prev + 1 : prev))} className="rounded-circle">
+                  <Button variant="outline-primary" onClick={() => setGuests((prev) => (prev != 4 ? prev + 1 : prev))} className="rounded-circle">
                     +
                   </Button>
                 </div>
@@ -262,7 +264,11 @@ const Rooms = function () {
           <Pagination>
             <Pagination.Prev onClick={handlePrevPage} />
             {totalPagesArray.map((page) => {
-              return <Pagination.Item onClick={handlePageChange}>{page + 1}</Pagination.Item>;
+              return (
+                <Pagination.Item key={page} onClick={handlePageChange}>
+                  {page + 1}
+                </Pagination.Item>
+              );
             })}
             <Pagination.Next onClick={handleNextPage} />
           </Pagination>
@@ -270,9 +276,6 @@ const Rooms = function () {
 
         <Row className="g-4">
           {roomsFromDb.map((room, index) => {
-            // let row = Math.floor(index / 2);
-            // let col = index % 2;
-            // let isColored = (row + col) % 2 === 0;
             let isColored = index % 2 === 0;
 
             return (
