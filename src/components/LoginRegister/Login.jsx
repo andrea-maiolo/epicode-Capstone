@@ -20,7 +20,8 @@ const Login = function ({ setUserRole }) {
       });
 
       if (!res.ok) {
-        throw new Error("Could not log you in, sorry try again");
+        const errorFromDb = await res.json();
+        throw new Error(errorFromDb.message);
       }
       const data = await res.json();
       return data;
@@ -74,6 +75,10 @@ const Login = function ({ setUserRole }) {
     window.location.reload();
   };
 
+  const handleReload = function () {
+    window.location.reload();
+  };
+
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center">
@@ -87,7 +92,14 @@ const Login = function ({ setUserRole }) {
     return (
       <div>
         <Alert variant="danger" className="mt-4">
-          Error login, sorry try again. {error}
+          <Alert.Heading>Error loading</Alert.Heading>
+          {error}
+          <hr />
+          <div>
+            <Button variant="dark" onClick={() => handleReload()}>
+              Try again
+            </Button>
+          </div>
         </Alert>
         <p>
           Retry to{" "}

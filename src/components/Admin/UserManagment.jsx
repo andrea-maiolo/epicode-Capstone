@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Col, Container, ListGroup, Pagination, Row, Spinner } from "react-bootstrap";
+import { Alert, Button, Card, Col, Container, ListGroup, Pagination, Row, Spinner } from "react-bootstrap";
 import AdminNav from "./AdmnNav/AdminNav";
 import "./Admin.scss";
 import { FaEnvelope } from "react-icons/fa";
@@ -28,8 +28,10 @@ const UserManagment = function () {
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        const errorFromDb = await response.json();
+        throw new Error(errorFromDb.message);
       }
+
       const data = await response.json();
       setUsers(data.content);
       setTotalP(data.totalPages);
@@ -72,6 +74,10 @@ const UserManagment = function () {
     setPage(pageToNavigate - 1);
   };
 
+  const handleRefresh = function () {
+    window.location.reload();
+  };
+
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
@@ -87,7 +93,14 @@ const UserManagment = function () {
         <AdminNav />
         <Container fluid className="manager-main">
           <Alert variant="danger" className="mt-4">
-            Error loading user data {error}
+            <Alert.Heading>Error loading</Alert.Heading>
+            {error}
+            <hr />
+            <div>
+              <Button variant="dark" onClick={() => handleRefresh()}>
+                Try again
+              </Button>
+            </div>
           </Alert>
         </Container>
       </div>
@@ -104,7 +117,11 @@ const UserManagment = function () {
           <Pagination>
             <Pagination.Prev onClick={handlePrevPage} />
             {totalPagesArray.map((page) => {
-              return <Pagination.Item onClick={handlePageChange}>{page + 1}</Pagination.Item>;
+              return (
+                <Pagination.Item key={page} onClick={handlePageChange}>
+                  {page + 1}
+                </Pagination.Item>
+              );
             })}
             <Pagination.Next onClick={handleNextPage} />
           </Pagination>

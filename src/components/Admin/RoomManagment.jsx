@@ -10,6 +10,7 @@ const RoomManagment = function () {
   const [deleteModal, setDeleteModal] = useState(false);
   const [updateModal, setUpdateModal] = useState(false);
   const [modalPicture, setModalPicture] = useState(false);
+  const [successModal, setSuccessModal] = useState(false);
   const [roomNumber, setRoomNumber] = useState("");
   const [roomCapacity, setRoomCapacity] = useState("");
   const [roomPrice, setRoomPrice] = useState("");
@@ -63,10 +64,15 @@ const RoomManagment = function () {
       });
 
       if (!responseSave.ok) {
-        throw new Error("Network response was not ok");
+        const errorFromDb = await responseSave.json();
+        if (responseSave.status == 422) {
+          errorFromDb.message += " " + errorFromDb.errorsList;
+        }
+        throw new Error(errorFromDb.message);
       }
 
       const datasave = await responseSave.json();
+      handleShow("success");
       fetchAllRooms(token);
       return datasave;
     } catch (err) {
@@ -105,12 +111,14 @@ const RoomManagment = function () {
       });
 
       if (!responseSave.ok) {
-        throw new Error("Network response was not ok");
+        const errorFromDb = await responseSave.json();
+        if (responseSave.status == 422) {
+          errorFromDb.message += " " + errorFromDb.errorsList;
+        }
+        throw new Error(errorFromDb.message);
       }
 
-      // const datasave = await responseSave.json();
       fetchAllRooms(token);
-      // return datasave;
     } catch (err) {
       setError(err.message);
     }
@@ -137,8 +145,11 @@ const RoomManagment = function () {
       });
 
       if (!response.ok) {
-        throw new Error("File upload failed");
+        const errorFromDb = await response.json();
+        throw new Error(errorFromDb.message);
       }
+      handleClose("picture");
+      handleShow("success");
       fetchAllRooms(token);
     } catch (err) {
       setError(err.message);
@@ -208,6 +219,10 @@ const RoomManagment = function () {
         setSelectedFile(null);
         break;
 
+      case "success":
+        setSuccessModal(false);
+        break;
+
       default:
         break;
     }
@@ -233,6 +248,11 @@ const RoomManagment = function () {
         setRoomSelected(otherInfo);
         setSelectedFile(null);
         break;
+
+      case "success":
+        setSuccessModal(true);
+        break;
+
       default:
         break;
     }
@@ -246,6 +266,11 @@ const RoomManagment = function () {
   };
 
   const handleUpdateRoom = function () {
+    if (!roomSelected.capacity || !roomSelected.description || !roomSelected.number || !roomSelected.price) {
+      alert("Please fill all fields!");
+      return;
+    }
+
     const token = localStorage.getItem("authToken");
     const roomDataUpdate = {
       number: roomSelected.number,
@@ -335,33 +360,6 @@ const RoomManagment = function () {
         <Row className="mb-3">
           <Col sm={12}>
             <Button onClick={() => handleShow("create")}>Create new room</Button>
-            {/* modal for save */}
-            <Modal show={createRoom} onHide={handleClose}>
-              <Modal.Header className="bg-secondary">
-                <Modal.Title>Create new Room</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form.Group controlId="roomCreation" onSubmit={handleSubmit}>
-                  <Form.Label>Room number</Form.Label>
-                  <Form.Control type="text" placeholder="Enter room number" value={roomNumber} onChange={(e) => setRoomNumber(e.target.value)} />
-                  <Form.Label>Room description</Form.Label>
-                  <Form.Control type="text" placeholder="Enter room description" value={roomDescription} onChange={(e) => setRoomDescription(e.target.value)} />
-                  <Form.Label>Room price</Form.Label>
-                  <Form.Control type="text" placeholder="Enter room price" value={roomPrice} onChange={(e) => setRoomPrice(e.target.value)} />
-                  <Form.Label>Room capacity</Form.Label>
-                  <Form.Control type="text" placeholder="Enter room capacity" value={roomCapacity} onChange={(e) => setRoomCapacity(e.target.value)} />
-                </Form.Group>
-              </Modal.Body>
-              <Modal.Footer>
-                <p>note that all rooms are created with a placeholder image, remember to update the picture later</p>
-                <Button variant="danger" onClick={() => handleClose("create")}>
-                  Cancell
-                </Button>
-                <Button variant="primary" onClick={handleSubmit}>
-                  Save
-                </Button>
-              </Modal.Footer>
-            </Modal>
           </Col>
         </Row>
 
@@ -387,7 +385,7 @@ const RoomManagment = function () {
 
             return (
               <Col md={4} key={room.id} className={`rounded ${isColored ? "bg-primary-subtle" : ""}`}>
-                <div className="d-flex flex-column h-100">
+                <div className="d-flex flex-column h-100 p-1">
                   <div className="rounded-4 overflow-hidden image-container">
                     <Image src={room.picture} alt={room.description} fluid className="room-image" />
                   </div>
@@ -439,7 +437,7 @@ const RoomManagment = function () {
             <Form onSubmit={handleUpdateRoom}>
               <Form.Group>
                 <Form.Label>Number</Form.Label>
-                <Form.Control type="text" value={roomSelected.number} onChange={(e) => setRoomSelected({ ...roomSelected, number: e.target.value })} />
+                <Form.Control type="number" value={roomSelected.number} onChange={(e) => setRoomSelected({ ...roomSelected, number: e.target.value })} />
               </Form.Group>
               <Form.Group>
                 <Form.Label>Description</Form.Label>
@@ -451,11 +449,11 @@ const RoomManagment = function () {
               </Form.Group>
               <Form.Group>
                 <Form.Label>Price</Form.Label>
-                <Form.Control type="text" value={roomSelected.price} onChange={(e) => setRoomSelected({ ...roomSelected, price: e.target.value })} />
+                <Form.Control type="number" value={roomSelected.price} onChange={(e) => setRoomSelected({ ...roomSelected, price: e.target.value })} />
               </Form.Group>
               <Form.Group>
                 <Form.Label>Capacity</Form.Label>
-                <Form.Control type="text" value={roomSelected.capacity} onChange={(e) => setRoomSelected({ ...roomSelected, capacity: e.target.value })} />
+                <Form.Control type="number" value={roomSelected.capacity} onChange={(e) => setRoomSelected({ ...roomSelected, capacity: e.target.value })} />
               </Form.Group>
             </Form>
           )}
@@ -489,6 +487,76 @@ const RoomManagment = function () {
           </Button>
           <Button variant="success" onClick={fetchUploadPicture} disabled={!selectedFile}>
             Upload
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* modal success */}
+      <Modal show={successModal} onHide={handleClose}>
+        <Modal.Header className="bg-secondary">
+          <Modal.Title>Room saved successfully</Modal.Title>
+        </Modal.Header>
+        <Modal.Footer>
+          <Button variant="danger" onClick={() => handleClose("success")}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* modal save */}
+      <Modal show={createRoom} onHide={handleClose}>
+        <Modal.Header className="bg-secondary">
+          <Modal.Title>Create new Room</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group controlId="roomCreation" onSubmit={handleSubmit}>
+            <Form.Label>Room number</Form.Label>
+            <Form.Control
+              type="number"
+              min={1}
+              max={1000}
+              placeholder="Enter room number"
+              required
+              value={roomNumber}
+              onChange={(e) => setRoomNumber(e.target.value)}
+            />
+            <Form.Label>Room description</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter room description"
+              required
+              minLength={10}
+              maxLength={255}
+              value={roomDescription}
+              onChange={(e) => setRoomDescription(e.target.value)}
+            />
+            <Form.Label>Room price</Form.Label>
+            <Form.Control
+              type="number"
+              min={1}
+              max={5000}
+              placeholder="Enter room price"
+              required
+              value={roomPrice}
+              onChange={(e) => setRoomPrice(e.target.value)}
+            />
+            <Form.Label>Room capacity</Form.Label>
+            <Form.Control
+              type="number"
+              min={1}
+              max={4}
+              placeholder="Enter room capacity"
+              required
+              value={roomCapacity}
+              onChange={(e) => setRoomCapacity(e.target.value)}
+            />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <p>note that all rooms are created with a placeholder image, remember to update the picture later</p>
+          <Button variant="danger" onClick={() => handleClose("create")}>
+            Cancell
+          </Button>
+          <Button variant="primary" onClick={handleSubmit}>
+            Save
           </Button>
         </Modal.Footer>
       </Modal>

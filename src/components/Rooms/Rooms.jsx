@@ -37,7 +37,8 @@ const Rooms = function () {
       });
 
       if (!response.ok) {
-        throw new Error("Could not get rooms");
+        const errorFromDb = await response.json();
+        throw new Error(errorFromDb.message);
       }
 
       const data = await response.json();
@@ -153,6 +154,10 @@ const Rooms = function () {
     setPage(pageToNavigate - 1);
   };
 
+  const handleRefresh = function () {
+    window.location.reload();
+  };
+
   if (isLoading) {
     return (
       <>
@@ -186,7 +191,14 @@ const Rooms = function () {
         <MyNav />
         <Container fluid style={{ marginTop: "75px" }}>
           <Alert variant="danger" className="mt-4">
-            Error fetching rooms sorry. {error}
+            <Alert.Heading>Error loading</Alert.Heading>
+            {error}
+            <hr />
+            <div>
+              <Button variant="dark" onClick={() => handleRefresh()}>
+                Try again
+              </Button>
+            </div>
           </Alert>
         </Container>
       </div>
