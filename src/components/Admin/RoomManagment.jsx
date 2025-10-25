@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, Button, Col, Container, Form, Image, Modal, Pagination, Row, Spinner } from "react-bootstrap";
+import { Alert, AlertHeading, Button, Col, Container, Form, Image, Modal, Pagination, Row, Spinner } from "react-bootstrap";
 import AdminNav from "./AdmnNav/AdminNav";
 import "./Admin.scss";
 
@@ -36,7 +36,8 @@ const RoomManagment = function () {
         },
       });
       if (!response.ok) {
-        throw new Error("Could not get rooms");
+        const errorFromDb = await response.json();
+        throw new Error(errorFromDb.message);
       }
 
       const data = await response.json();
@@ -294,6 +295,10 @@ const RoomManagment = function () {
     setPage(pageToNavigate - 1);
   };
 
+  const handleReload = function () {
+    window.location.reload();
+  };
+
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
@@ -309,7 +314,14 @@ const RoomManagment = function () {
         <AdminNav />
         <Container fluid className="manager-main">
           <Alert variant="danger" className="mt-4">
-            Error loading: {error}
+            <Alert.Heading>Error loading</Alert.Heading>
+            {error}
+            <hr />
+            <div>
+              <Button variant="dark" onClick={() => handleReload()}>
+                Try again
+              </Button>
+            </div>
           </Alert>
         </Container>
       </div>
