@@ -11,6 +11,8 @@ import RoomManagment from "./components/Admin/RoomManagment";
 import NotFoundPage from "./components/NotFoundPage/NotFoundPage";
 import { useState } from "react";
 import UnauthPage from "./components/UnauthPage/UnauthPage";
+import PaymentSuccess from "./components/Payment/PaymentSuccess";
+import PaymentCancel from "./components/Payment/PaymentCancel";
 
 function App() {
   const ProtectedRoute = ({ children, requiredRole, userRole }) => {
@@ -85,6 +87,8 @@ function App() {
         />
         <Route path="*" element={<NotFoundPage />} />
         <Route path="/unauth" element={<UnauthPage />} />
+        <Route path="payment/success" element={<PaymentSuccess />} />
+        <Route path="payment/cancel" element={<PaymentCancel />} />
       </Routes>
     </BrowserRouter>
   );
