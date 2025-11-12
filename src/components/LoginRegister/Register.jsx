@@ -21,7 +21,11 @@ const Register = function () {
       });
 
       if (!res.ok) {
-        throw new Error("Could not register you, sorry try again");
+        const errorFromDb = await res.json();
+        if (res.status == 422) {
+          errorFromDb.message += " " + errorFromDb.errorsList;
+        }
+        throw new Error(errorFromDb.message);
       }
 
       const data = await res.json();
@@ -68,6 +72,10 @@ const Register = function () {
     setSurname(e.target.value);
   };
 
+  const handleRefresh = function () {
+    window.location.reload();
+  };
+
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center">
@@ -80,11 +88,22 @@ const Register = function () {
   if (error) {
     return (
       <div>
-        <Container fluid>
-          <Alert variant="danger" className="mt-4">
-            Error loading: {error}
-          </Alert>
-        </Container>
+        <Alert variant="danger" className="mt-4">
+          <Alert.Heading>Error loading</Alert.Heading>
+          {error}
+          <hr />
+          <div>
+            <Button variant="dark" onClick={() => handleRefresh()}>
+              Try again
+            </Button>
+          </div>
+        </Alert>
+        <p>
+          Retry to{" "}
+          <span className="text-primary fw-semibold" onClick={() => handleRefresh()}>
+            register
+          </span>
+        </p>
       </div>
     );
   }
@@ -98,7 +117,9 @@ const Register = function () {
             <Form.Control
               className="border-secondary"
               type="text"
-              placeholder="gianni"
+              placeholder="first name"
+              maxLength={50}
+              required
               value={name}
               onKeyDown={handleKeyDown}
               onChange={(e) => handleNameChange(e)}
@@ -110,7 +131,9 @@ const Register = function () {
             <Form.Control
               className="border-secondary"
               type="text"
-              placeholder="nanni"
+              required
+              maxLength={50}
+              placeholder="last name"
               value={surname}
               onKeyDown={handleKeyDown}
               onChange={(e) => handleSurnameChange(e)}
@@ -122,7 +145,8 @@ const Register = function () {
             <Form.Control
               className="border-secondary"
               type="email"
-              placeholder="gianni@gmail.com"
+              required
+              placeholder="example@something.com"
               value={email}
               onKeyDown={handleKeyDown}
               onChange={(e) => handleEmailChange(e)}
@@ -135,6 +159,9 @@ const Register = function () {
               className="border-secondary"
               type="password"
               placeholder="password"
+              required
+              minLength={2}
+              maxLength={128}
               value={password}
               onKeyDown={handleKeyDown}
               onChange={(e) => handlePasswordChange(e)}

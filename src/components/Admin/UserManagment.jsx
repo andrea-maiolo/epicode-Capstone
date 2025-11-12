@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Col, Container, ListGroup, Row, Spinner } from "react-bootstrap";
+import { Alert, Button, Card, Col, Container, ListGroup, Pagination, Row, Spinner } from "react-bootstrap";
 import AdminNav from "./AdmnNav/AdminNav";
 import "./Admin.scss";
 import { FaEnvelope } from "react-icons/fa";
@@ -10,15 +10,13 @@ const UserManagment = function () {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(0);
   const [totalP, setTotalP] = useState(null);
+  const [totalPagesArray, setTotalPagesArray] = useState(null);
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [page]);
 
   const fetchUsers = async () => {
-    console.log("run");
-    console.log(page);
-
     const token = localStorage.getItem("authToken");
     try {
       const response = await fetch(`http://localhost:3001/users?pageNumber=${page}`, {
@@ -30,12 +28,14 @@ const UserManagment = function () {
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        const errorFromDb = await response.json();
+        throw new Error(errorFromDb.message);
       }
+
       const data = await response.json();
       setUsers(data.content);
-      console.log(data);
       setTotalP(data.totalPages);
+      createTotalPagesArray(data.totalPages);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -43,13 +43,20 @@ const UserManagment = function () {
     }
   };
 
+  const createTotalPagesArray = function (total) {
+    let tempArray = [];
+    for (let i = 0; i < total; i++) {
+      tempArray.push(i);
+    }
+    setTotalPagesArray(tempArray);
+  };
+
   const handlePrevPage = () => {
     if (page == 0) {
       return;
     } else {
       setPage(page - 1);
-      console.log(page);
-      // fetchUsers();
+      fetchUsers();
     }
   };
 
@@ -58,9 +65,17 @@ const UserManagment = function () {
       return;
     } else {
       setPage(page + 1);
-
       fetchUsers();
     }
+  };
+
+  const handlePageChange = function (e) {
+    const pageToNavigate = e.target.innerHTML;
+    setPage(pageToNavigate - 1);
+  };
+
+  const handleRefresh = function () {
+    window.location.reload();
   };
 
   if (isLoading) {
@@ -78,7 +93,14 @@ const UserManagment = function () {
         <AdminNav />
         <Container fluid className="manager-main">
           <Alert variant="danger" className="mt-4">
-            Error loading user data {error}
+            <Alert.Heading>Error loading</Alert.Heading>
+            {error}
+            <hr />
+            <div>
+              <Button variant="dark" onClick={() => handleRefresh()}>
+                Try again
+              </Button>
+            </div>
           </Alert>
         </Container>
       </div>
@@ -90,13 +112,21 @@ const UserManagment = function () {
       <AdminNav />
       <Container fluid className="manager-main py-5 px-md-5">
         <h2 className="display-4 mb-4 user-managment-heading">User Directory</h2>
-        <div className="d-flex justify-content-end mb-4">
-          <Button className="me-2" onClick={handlePrevPage}>
-            Prev
-          </Button>
-          <p className="me-2 pt-2 m-0">{page}</p>
-          <Button onClick={handleNextPage}>Next</Button>
+
+        <div>
+          <Pagination>
+            <Pagination.Prev onClick={handlePrevPage} />
+            {totalPagesArray.map((page) => {
+              return (
+                <Pagination.Item key={page} onClick={handlePageChange}>
+                  {page + 1}
+                </Pagination.Item>
+              );
+            })}
+            <Pagination.Next onClick={handleNextPage} />
+          </Pagination>
         </div>
+
         {users.length > 0 ? (
           <Row className="g-4">
             {users.map((user) => (

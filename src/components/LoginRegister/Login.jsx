@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form, Button, Spinner, Alert, Container } from "react-bootstrap";
+import { Form, Button, Spinner, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const Login = function ({ setUserRole }) {
@@ -20,7 +20,8 @@ const Login = function ({ setUserRole }) {
       });
 
       if (!res.ok) {
-        throw new Error("Could not log you in, sorry try again");
+        const errorFromDb = await res.json();
+        throw new Error(errorFromDb.message);
       }
       const data = await res.json();
       return data;
@@ -70,6 +71,14 @@ const Login = function ({ setUserRole }) {
     }
   };
 
+  const handleRefresh = function () {
+    window.location.reload();
+  };
+
+  const handleReload = function () {
+    window.location.reload();
+  };
+
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center">
@@ -82,11 +91,22 @@ const Login = function ({ setUserRole }) {
   if (error) {
     return (
       <div>
-        <Container fluid>
-          <Alert variant="danger" className="mt-4">
-            Error login, sorry try again. {error}
-          </Alert>
-        </Container>
+        <Alert variant="danger" className="mt-4">
+          <Alert.Heading>Error loading</Alert.Heading>
+          {error}
+          <hr />
+          <div>
+            <Button variant="dark" onClick={() => handleReload()}>
+              Try again
+            </Button>
+          </div>
+        </Alert>
+        <p>
+          Retry to{" "}
+          <span className="text-primary fw-semibold" onClick={() => handleRefresh()}>
+            login
+          </span>
+        </p>
       </div>
     );
   }

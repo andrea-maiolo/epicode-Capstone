@@ -1,4 +1,4 @@
-import { Button, Col, Container, Form, Image, Row, Alert, Modal, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Form, Image, Row, Alert, Modal, Spinner, Pagination } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import "./Rooms.scss";
 import MyNav from "../Navbar/MyNav";
@@ -7,25 +7,28 @@ import MyFooter from "../Footer/MyFooter";
 const Rooms = function () {
   const [roomsFromDb, setRoomsFromDb] = useState([]);
   const [error, setError] = useState("");
-  const [adults, setAdults] = useState(1);
-  const [children, setChildren] = useState(0);
+  const [guests, setGuests] = useState(1);
   const [checkinDate, setCheckinDate] = useState("");
   const [checkoutDate, setCheckoutDate] = useState("");
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [totalP, setTotalP] = useState(null);
+  const [totalPagesArray, setTotalPagesArray] = useState(null);
 
   const API_URl = "http://localhost:3001";
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    fetchRooms(token);
-  }, []);
+    fetchRooms();
+  }, [page]);
 
-  const fetchRooms = async function (token) {
+  const fetchRooms = async function () {
+    const token = localStorage.getItem("authToken");
+    setIsLoading(true);
     try {
-      const response = await fetch(`${API_URl}/rooms`, {
+      const response = await fetch(`${API_URl}/rooms?pageNumber=${page}&checkin=${checkinDate}&checkout=${checkoutDate}&guests=${guests}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -34,11 +37,15 @@ const Rooms = function () {
       });
 
       if (!response.ok) {
-        throw new Error("Could not get rooms");
+        const errorFromDb = await response.json();
+        throw new Error(errorFromDb.message);
       }
 
       const data = await response.json();
+      console.log(data);
       setRoomsFromDb(data.content);
+      setTotalP(data.totalPages);
+      createTotalPagesArray(data.totalPages);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -46,47 +53,17 @@ const Rooms = function () {
     }
   };
 
-  const fetchFilterRooms = async function () {
-    const token = localStorage.getItem("authToken");
-    try {
-      const response = await fetch(`${API_URl}/rooms/available?checkin=${checkinDate}&checkout=${checkoutDate}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const data = await response.json();
-      setRoomsFromDb(data);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
-  const handleGuestsChange = (type, action) => {
-    if (type === "adults") {
-      setAdults((prev) => (action === "increment" ? prev + 1 : Math.max(0, prev - 1)));
-    } else {
-      setChildren((prev) => (action === "increment" ? prev + 1 : Math.max(0, prev - 1)));
-    }
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setPage(0);
     setShowErrorAlert(false);
 
-    if ((adults === 0 && children === 0) || !checkinDate || !checkoutDate || (checkinDate && checkoutDate && new Date(checkoutDate) <= new Date(checkinDate))) {
+    if (guests === 0 || !checkinDate || !checkoutDate || (checkinDate && checkoutDate && new Date(checkoutDate) <= new Date(checkinDate))) {
       setShowErrorAlert(true);
     }
 
     if (!showErrorAlert) {
-      fetchFilterRooms();
+      fetchRooms();
     } else {
       setShowErrorAlert(true);
     }
@@ -102,7 +79,7 @@ const Rooms = function () {
   };
 
   const handleBookNow = (room) => {
-    if ((adults === 0 && children === 0) || !checkinDate || !checkoutDate || new Date(checkoutDate) <= new Date(checkinDate)) {
+    if (guests === 0 || !checkinDate || !checkoutDate || new Date(checkoutDate) <= new Date(checkinDate)) {
       window.alert("Please fill in all booking details (guests, check-in, and check-out dates) before booking.");
       setShowModal(false);
     } else {
@@ -121,6 +98,7 @@ const Rooms = function () {
         checkout: checkoutDate,
         userId: userId,
         roomId: selectedRoom.id,
+        guests: guests,
       };
 
       const response = await fetch("http://localhost:3001/booking", {
@@ -147,12 +125,63 @@ const Rooms = function () {
 
   const handleCloseModal = () => setShowModal(false);
 
+  const createTotalPagesArray = function (total) {
+    let tempArray = [];
+    for (let i = 0; i < total; i++) {
+      tempArray.push(i);
+    }
+    setTotalPagesArray(tempArray);
+  };
+
+  const handlePrevPage = () => {
+    if (page == 0) {
+      return;
+    } else {
+      setPage(page - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (page == totalP - 1) {
+      return;
+    } else {
+      setPage(page + 1);
+    }
+  };
+
+  const handlePageChange = function (e) {
+    const pageToNavigate = e.target.innerHTML;
+    setPage(pageToNavigate - 1);
+  };
+
+  const handleRefresh = function () {
+    window.location.reload();
+  };
+
   if (isLoading) {
     return (
-      <div className="d-flex justify-content-center align-items-center vh-100">
-        <Spinner animation="border" variant="primary" />
-        <span className="ms-3 text-primary">Loading...</span>
-      </div>
+      <>
+        <MyNav />
+        <section className="hero-section">
+          <div className="hero-bg-rooms"></div>
+          <div className="hero-overlay"></div>
+          <div className="hero-content">
+            <h1 className="display-4 fw-bold mb-3 mb-md-4">Browse Our Wonderful Rooms</h1>
+          </div>
+        </section>
+        <section className="py-5 py-md-5 bg-light text-center">
+          <Container>
+            <Col lg={8} className="mx-auto">
+              <h2 className="fs-2 fw-semibold mb-3 text-primary">Your journey starts with the right room</h2>
+              <div className="bg-primary mx-auto" style={{ width: "5rem", height: "0.25rem", borderRadius: "999px" }}></div>
+            </Col>
+          </Container>
+        </section>
+        <div className="d-flex justify-content-center align-items-center vh-100">
+          <Spinner animation="border" variant="primary" />
+          <span className="ms-3 text-primary">Loading...</span>
+        </div>
+      </>
     );
   }
 
@@ -162,7 +191,14 @@ const Rooms = function () {
         <MyNav />
         <Container fluid style={{ marginTop: "75px" }}>
           <Alert variant="danger" className="mt-4">
-            Error fetching rooms sorry. {error}
+            <Alert.Heading>Error loading</Alert.Heading>
+            {error}
+            <hr />
+            <div>
+              <Button variant="dark" onClick={() => handleRefresh()}>
+                Try again
+              </Button>
+            </div>
           </Alert>
         </Container>
       </div>
@@ -188,7 +224,7 @@ const Rooms = function () {
         </Container>
       </section>
 
-      <Container className="rounded shadow bg-secondary mb-3">
+      <Container fluid className="bg-secondary mb-3 shadow-md">
         <Form onSubmit={handleSubmit}>
           {showErrorAlert && (
             <Alert variant="danger" onClose={() => setShowErrorAlert(false)} dismissible>
@@ -196,42 +232,30 @@ const Rooms = function () {
             </Alert>
           )}
           <Row className="g-3">
-            <Col md={6}>
+            <Col md={4}>
               <Form.Group>
                 <Form.Label>Guests</Form.Label>
-                <div className="d-flex flex-column flex-sm-row justify-content-between">
-                  <div className="d-flex align-items-center mb-2 mb-sm-0">
-                    <span className="me-2">Adults:</span>
-                    <Button variant="outline-primary" onClick={() => handleGuestsChange("adults", "decrement")} className="rounded-circle">
-                      -
-                    </Button>
-                    <span className="mx-2">{adults}</span>
-                    <Button variant="outline-primary" onClick={() => handleGuestsChange("adults", "increment")} className="rounded-circle">
-                      +
-                    </Button>
-                  </div>
-                  <div className="d-flex align-items-center">
-                    <span className="me-2">Children:</span>
-                    <Button variant="outline-primary" onClick={() => handleGuestsChange("children", "decrement")} className="rounded-circle">
-                      -
-                    </Button>
-                    <span className="mx-2">{children}</span>
-                    <Button variant="outline-primary" onClick={() => handleGuestsChange("children", "increment")} className="rounded-circle">
-                      +
-                    </Button>
-                  </div>
+                <div className="d-flex justify-content-evenly align-items-center">
+                  <span className="me-2">Count:</span>
+                  <Button variant="outline-primary" onClick={() => setGuests((prev) => (prev != 1 ? prev - 1 : prev))} className="rounded-circle">
+                    -
+                  </Button>
+                  <span className="mx-2">{guests}</span>
+                  <Button variant="outline-primary" onClick={() => setGuests((prev) => (prev != 4 ? prev + 1 : prev))} className="rounded-circle">
+                    +
+                  </Button>
                 </div>
               </Form.Group>
             </Col>
 
-            <Col md={3}>
+            <Col md={4}>
               <Form.Group>
                 <Form.Label>Check-in Date</Form.Label>
                 <Form.Control type="date" value={checkinDate} onChange={(e) => setCheckinDate(e.target.value)} required />
               </Form.Group>
             </Col>
 
-            <Col md={3}>
+            <Col md={4}>
               <Form.Group>
                 <Form.Label>Check-out Date</Form.Label>
                 <Form.Control type="date" value={checkoutDate} onChange={(e) => setCheckoutDate(e.target.value)} required />
@@ -247,24 +271,36 @@ const Rooms = function () {
         </Form>
       </Container>
 
-      <Container fluid>
+      <Container fluid className="mb-2">
+        <div>
+          <Pagination>
+            <Pagination.Prev onClick={handlePrevPage} />
+            {totalPagesArray.map((page) => {
+              return (
+                <Pagination.Item key={page} onClick={handlePageChange}>
+                  {page + 1}
+                </Pagination.Item>
+              );
+            })}
+            <Pagination.Next onClick={handleNextPage} />
+          </Pagination>
+        </div>
+
         <Row className="g-4">
           {roomsFromDb.map((room, index) => {
-            let row = Math.floor(index / 2);
-            let col = index % 2;
-            let isColored = (row + col) % 2 === 0;
+            let isColored = index % 2 === 0;
 
             return (
-              <Col md={6} key={room.id} className={`rounded ${isColored ? "bg-primary-subtle" : ""}`}>
+              <Col md={4} key={room.id} className={`rounded ${isColored ? "bg-primary-subtle" : ""}`}>
                 <div className="d-flex flex-column h-100 mt-2">
                   <div className="rounded-4 overflow-hidden image-container">
                     <Image src={room.picture} alt={room.description} fluid className="room-image" loading="lazy" />
                   </div>
                   <div className="mt-3 p-2">
                     <h5>{room.description}</h5>
-                    <p>Price: {room.price}&euro; per night</p>
-                    <p>Capacity: {room.capacity}</p>
-                    <Button variant="primary" onClick={() => handleBookNow(room)}>
+                    <p className="m-0">Price: {room.price}&euro; per night</p>
+                    <p className="m-0">Capacity: {room.capacity}</p>
+                    <Button className="mt-3" variant="primary" onClick={() => handleBookNow(room)}>
                       Book Now
                     </Button>
                   </div>
@@ -276,7 +312,7 @@ const Rooms = function () {
       </Container>
 
       <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
+        <Modal.Header className="bg-secondary" closeButton>
           <Modal.Title>Booking Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -290,7 +326,7 @@ const Rooms = function () {
                 <strong>Check-out:</strong> {checkoutDate}
               </p>
               <p>
-                <strong>Guests:</strong> {adults} Adults, {children} Children
+                <strong>Guests:</strong> {guests}
               </p>
               <hr />
               <p>

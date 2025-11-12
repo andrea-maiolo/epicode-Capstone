@@ -38,7 +38,7 @@ const AdminBookingCalendar = function () {
     const token = localStorage.getItem("authToken");
     const fetchAdminData = async () => {
       try {
-        const roomsResponse = await fetch(`${API_URL}/rooms`, {
+        const roomsResponse = await fetch(`${API_URL}/rooms/forAdmin`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const bookingsResponse = await fetch(`${API_URL}/booking`, {
@@ -46,17 +46,18 @@ const AdminBookingCalendar = function () {
         });
 
         if (!roomsResponse.ok || !bookingsResponse.ok) {
-          throw new Error("Failed to fetch admin data.");
+          const errRoomFromDb = await roomsResponse.json();
+          const errBookFromDb = await bookingsResponse.json();
+          throw new Error((errRoomFromDb.message += " " + errBookFromDb.message));
         }
 
         const roomsData = await roomsResponse.json();
         const bookingsData = await bookingsResponse.json();
 
-        setRooms(roomsData.content);
-        setBookings(bookingsData.content);
-        console.log(bookingsData.content);
+        setRooms(roomsData);
+        setBookings(bookingsData);
       } catch (err) {
-        setError(err);
+        setError(err.message);
       } finally {
         setIsLoading(false);
       }
@@ -82,6 +83,10 @@ const AdminBookingCalendar = function () {
     return date.toLocaleDateString("en-US", options);
   };
 
+  const handleRefresh = function () {
+    window.location.reload();
+  };
+
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
@@ -96,7 +101,14 @@ const AdminBookingCalendar = function () {
         <AdminNav />
         <Container fluid className="manager-main pt-5">
           <Alert variant="danger" className="mt-4">
-            Error: {error.message}
+            <Alert.Heading>Error loading</Alert.Heading>
+            {error}
+            <hr />
+            <div>
+              <Button variant="dark" onClick={() => handleRefresh()}>
+                Try again
+              </Button>
+            </div>
           </Alert>
         </Container>
       </div>
